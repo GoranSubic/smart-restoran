@@ -8,11 +8,11 @@ include "header.php";
 <div class="main container-fluid">
     <div class="sectionShow">
         <div class="secimg">
-            <img src="<?php echo "http://localhost/smart2015/restoran/img/Indian_Spices.jpg"; ?>" alt="User Photo" style="width:300px;height:300px">
+            <img src="http://localhost/smart2015/smart-restoran/img/Indian_Spices.jpg" alt="User Photo" style="width:300px;height:300px">
         </div>
         <div class="secol">
 
-            <form method="post" action="showUser.php" class="ulindex">
+            <form enctype="multipart/form-data" method="post" action="showUser.php" class="ulindex">
             <!--form method="post" action="<!--?php echo $_SERVER['PHP_SELF'] ?>"-->
                 <!--input type="hidden" name="id" value="<!--?php if(isset($id)) echo $id; ?>"-->
                 Ime: <input type="text" name="name" value=""><br />
@@ -24,7 +24,9 @@ include "header.php";
                 Mob tel: <input type="tel" name="mphone" value=""><br />
                 Radnik: <input type="checkbox" name="is_staff" value=""><br />
                 Image url: <input type="text" name="image_url" value=""><br />
-                Photo: <input type="file" name="photo" value=""><br />
+                <input type="hidden" name="MAX_FILE_SIZE" value="1000000" />
+                <!-- Name of input element determines name in $_FILES array -->
+                Photo: <input name="pic_1" type="file" />
 
                 Radi u: <input type="text" name="work_place" value=""><br />
                 Plata: <input type="text" name="salary" value=""><br />

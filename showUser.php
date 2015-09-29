@@ -12,23 +12,50 @@ $userDao = new UserDAO();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    if(isset($_POST['photo'])){
-        $photo = new Photo();
+    $uploaddir = 'C:/xampp/htdocs/smart2015/smart-restoran/photo/user/';
+    //$uploaddir = '/smart2015/smart-restoran/photo/user/';
+    $uploadfile = $uploaddir . basename($_FILES['pic_1']['name']);
 
-        $photo->setTitle('file_name');
+        //if(isset($_POST['pic_1'])){
+        if (move_uploaded_file($_FILES['pic_1']['tmp_name'], $uploadfile)) {
 
-        $sql = "INSERT INTO photo SET title = '".$photo->getTitle()."';";
+            echo "File is valid, and was successfully uploaded.\n";
 
-        if (!$results = $connection->query($sql)){
-            die('Ne mogu da izvrsim upit zbog ['. $connection->error
-                . "]");
-        }
-        $photo_id = mysqli_insert_id($connection);
-        echo "Photo ID posle inserta iznosi: {$photo_id}";
-    }else{
-        $photo_id = '1';
-        echo "Setovani na 1 Photo ID iznosi: {$photo_id}";
-    }
+            $target_file = basename($_FILES['pic_1']['name']);
+            $upload_dir_url = "/photo/user";
+
+                $file_name = $target_file;
+
+                $target_file_url = "http://localhost/smart2015/smart-restoran".$upload_dir_url."/".$target_file;
+
+
+                $photo = new Photo();
+                $photo->setTitle($file_name);
+                $sql = "INSERT INTO photo SET title = '" . $photo->getTitle() . "';";
+                echo "File name je sada: " . $file_name;
+
+                if (!$results = $connection->query($sql)) {
+                    die('Ne mogu da izvrsim upit zbog [' . $connection->error
+                        . "]");
+                }
+                $photo_id = mysqli_insert_id($connection);
+                echo "Photo ID posle inserta iznosi: {$photo_id}";
+            }else{
+                echo "Sorry, there was an error uploading your file.";
+            echo '<pre>';
+            echo "Possible file upload attack!\n";
+            echo 'Here is some more debugging info:';
+            print_r($_FILES);
+
+            print "</pre>";
+
+                $photo_id = '1';
+                $target_file_url = "http://localhost/smart2015/smart-restoran/photo/user/Indian_Spices.jpg";
+                echo "Setovani na 1 Photo ID iznosi: {$photo_id}";
+            }
+
+
+
 
     $staff = new Staff();
 
@@ -43,9 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $rowurl = $results->fetch_assoc();
         $photo_title = $rowurl['title'];
-        $image_url = "http://localhost/photo/user/{$photo_title}";
-        echo "<br />Prilikom inserta Title of photo: $photo_title";
-        echo "<br />Prilikom inserta Image url of photo: $image_url";
+        $image_url = $target_file_url;
     }
 
     if(isset($_POST['is_admin'])){ $is_admin = '1'; } else { $is_admin = '0'; }
@@ -107,23 +132,23 @@ if (!$results = $connection->query($sql)){
 <div class="main container-fluid">
     <div class="sectionShow">
         <div class="secimg">
-            <img src="<?php echo $row['image_url']; ?>" alt="User Photo" style="width:300px;height:300px">
+            <img src="<?php echo $row['image_url']; ?>" alt="User Photo" style="width:300px;height:200px">
         </div>
         <div class="secol">
             <ul class="ulindex">
-                <li><?php echo "<h1>". $row['name'] ."</h1>" ?></li>
-                <li><?php echo "<h4>". $row['secname'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['jbg'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['email'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['passwd'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['phone'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['mphone'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['is_staff'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['image_url'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['photo_id'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['work_place'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['salary'] ."</h4>" ?></li>
-                <li><?php echo "<h4>". $row['is_admin'] ."</h4>" ?></li>
+                <li><?php echo "<h1>Ime ". $row['name'] ."</h1>" ?></li>
+                <li><?php echo "<h4>Prezime ". $row['secname'] ."</h4>" ?></li>
+                <li><?php echo "<h4>JBG ". $row['jbg'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Email ". $row['email'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Password". $row['passwd'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Telefon". $row['phone'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Mob tel". $row['mphone'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Radnik ". $row['is_staff'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Url fotke". $row['image_url'] ."</h4>" ?></li>
+                <li><?php echo "<h4>ID fotke". $row['photo_id'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Radi u ". $row['work_place'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Plata ". $row['salary'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Admin ". $row['is_admin'] ."</h4>" ?></li>
                 <br />
                 <br />
                 <li><?php
