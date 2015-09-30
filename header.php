@@ -26,7 +26,8 @@
             <li class="uli menu"><a href="african.php">African cuisine</a></li>
             <li class="uli menu"><a href="caribbean.php">Caribbean cuisine</a></li>
             <li class="uli menu"><a href="indian.php">Indian cuisine</a></li>
-            <li class="uli menu"><a href="ouroffer.php">We offer</a></li>
+            <li class="uli menu"><a href="ouroffer.php">OurOffffer</a></li>
+            <li class="uli menu"><a href="loginPage.php">LogIn</a></li>
         </ul>
     </div>
 

@@ -34,29 +34,31 @@ if(isset($login)) {
 
 ?>
 
-<table class="table">
-    <tr>
-        <th>R B</th>
-        <th>Naziv artikla</th>
-        <th>Detaljniji opis</th>
-        <th>Cena artikla</th>
-        <th>Fotka artikla</th>
-        <th>Obrisi</th>
-    </tr>
+<div class="main container-fluid">
     <?php WHILE ($row = $results->fetch_assoc()){ ?>
-    <tr>
-        <!--td><!?php echo "<a href='show.php?id=".$row['id']." >". $row['id']."</a>" ?></td-->
-        <td><?php echo "<a href='showItem.php?id={$row['id']}'> ".$row['id']."</a>"; ?></td>
-        <td><?php echo $row['title'] ?></td>
-        <td><?php echo $row['description'] ?></td>
-        <td><?php echo $row['price'] ?></td>
-        <!--td><!--?php echo "<a href='picture.php?url=".urlencode($row['image_url'])."' ><img src=".$row['image_url']." style="width=30px;height=30px"></a>" ?></td-->
-        <td><?php echo "<a href='showItem.php?id={$row['id']}' ><img src={$row['image_url']} style='width:50px;height:50px'></a>"; ?></td>
-        <td><?php echo "<a href='{$_SERVER['PHP_SELF']}?del={$row['id']}' style='color:red'>Obrisi</a>"; ?></td>
-    </tr>
-    <?php } ?>
+        <div class="secolPhoto">
+            <table class="table datagrid" style="width: 100%">
 
-</table>
+                <tr style="background-color: chocolate">
+                    <th style="width: 50%">ID: <?php echo "<a style='color:darkred' href='showItem.php?id={$row['id']}'> ".$row['id']."</a>"; ?></th>
+                    <th style="width: 150px"><?php echo $row['title'] ?></th>
+                </tr>
+
+                <tr>
+                    <!--td><!?php echo "<a href='show.php?id=".$row['id']." >". $row['id']."</a>" ?></td-->
+                    <td style="width: 50%"><?php echo $row['description'] ?></td>
+                    <td style="width: 150px"><?php echo "<a href='showItem.php?id={$row['id']}' ><img src={$row['image_url']} style='width:100px;height:100px'></a>"; ?></td>
+                    <!--td><!--?php echo "<a href='picture.php?url=".urlencode($row['image_url'])."' ><img src=".$row['image_url']." style="width=30px;height=30px"></a>" ?></td-->
+                </tr>
+                <tfoot>
+                    <td><?php echo $row['price'] ?></td>
+                    <td><a href="">Poruci</a><input type="number" min="1" max="10" value="1"></td>
+                </tfoot>
+
+            </table>
+        </div>
+    <?php } ?>
+</div>
 
 <?php
 include "footer.php";

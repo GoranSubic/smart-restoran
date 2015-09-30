@@ -259,4 +259,37 @@ class UserDAO {
 
     }
 
+    public function listPhoto($photo_id){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sqlphoto = "SELECT title FROM photo WHERE id = {$photo_id}";
+        if (!$results = $connection->query($sqlphoto)){
+            $title = "photo_name";
+            return $title;
+        }
+        $rowphoto = $results->fetch_assoc();
+        $title = $rowphoto['title'];
+        return $title;
+    }
+
+    public function deleteUser($id_user){
+
+        $dbConnDel = new DbConnection();
+        $connection = $dbConnDel->connectToDB();
+
+        $sqldelstaff = "DELETE FROM staff WHERE user_id = (SELECT id FROM user WHERE id = {$id_user});";
+        if (!$resultsstaff = $connection->query($sqldelstaff)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
+        }
+
+        $sqldel = "DELETE FROM user WHERE id = {$id_user}";
+        if (!$results = $connection->query($sqldel)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
+        }
+    }
+
 }
