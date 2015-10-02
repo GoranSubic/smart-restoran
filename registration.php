@@ -15,16 +15,24 @@ if(isset($_REQUEST['submit'])){
     $user->setSecName($_POST['secname']);
     $user->setEmail($_POST['email']);
     $user->setPasswd($_POST['passwd']);
+    $user->setJbg($_POST['jbg']);
+    $user->setPhone($_POST['phone']);
+    $user->setMphone($_POST['mphone']);
+    $user->setImageUrl($_POST['image_url']);
 
     $signup = new LoginDAO();
     $register = $signup->reg_user(
         $user->getName(),
         $user->getSecName(),
         $user->getEmail(),
-        $user->getPasswd()
+        $user->getPasswd(),
+        $user->getJbg(),
+        $user->getPhone(),
+        $user->getMphone(),
+        $user->getImageUrl()
     );
     if($register){
-        echo '<h3>Registration successful <a href="login.php">Click here</a> to login</h3>';
+        echo '<h3>Registration successful <a href="loginPage.php">Click here</a> to login</h3>';
     } else {
         echo '<h3>Registration failed. Email alredy exists, please try again</h3>';
     }
@@ -33,7 +41,7 @@ if(isset($_REQUEST['submit'])){
 
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 
-<h4>Register to make orders</h4>
+<h4>Registrujte se da bi ste mogli da kreirate porudzbine</h4>
 
 <script type="text/javascript" language="javascript">
     function submitregister() {
@@ -62,28 +70,47 @@ if(isset($_REQUEST['submit'])){
         <table>
             <tbody>
             <tr>
-                <th>Enter Name:</th>
-                <td><input type="text" name="name" required="" /></td>
+                <th>Ime:</th>
+                <td><input type="text" name="name" required="" /><span style="color:darkred">*</span></td>
             </tr>
             <tr>
-                <th>Enter SecondName:</th>
-                <td><input type="text" name="secname" required="" /></td>
+                <th>Prezime:</th>
+                <td><input type="text" name="secname" required="" /><span style="color:darkred">*</span></td>
             </tr>
             <tr>
                 <th>Email:</th>
-                <td><input type="text" name="email" required="" /></td>
+                <td><input type="email" name="email" required="" /><span style="color:darkred">*</span></td>
             </tr>
             <tr>
-                <th>Password:</th>
-                <td><input type="password" name="passwd" required="" /></td>
+                <th>Sifra:</th>
+                <td><input type="password" name="passwd" required="" /><span style="color:darkred">*</span></td>
+            </tr>
+
+            <tr>
+                <th>J B G:</th>
+                <td><input type="text" name="jbg" /></td>
+            </tr>
+            <tr>
+                <th>Telefon:</th>
+                <td><input type="tel" name="phone" /></td>
+            </tr>
+
+            <tr>
+                <th>Mob tel:</th>
+                <td><input type="tel" name="mphone" /></td>
+            </tr>
+            <tr>
+                <th>URL fotke:</th>
+                <td><input type="url" name="image_url" /></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><input onclick="return(submitregister());" type="submit" name="submit" value="Registruj se" /></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input onclick="return(submitregister());" type="submit" name="submit" value="Register" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><a href="login.php">Already registered! Click Here!</a></td>
+                <td><a href="loginPage.php">Ako ste vec registrovani kliknite ovde!</a></td>
             </tr>
             </tbody>
         </table>

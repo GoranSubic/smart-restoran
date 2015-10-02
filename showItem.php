@@ -77,16 +77,30 @@ if (!$results = $connection->query($sql)){
                 <li><?php echo "<h3>". $row['price'] ." din</h3>" ?></li>
                 <br />
                 <br />
-                <li><?php
-                        if(isset($login)) {
-                            echo "<a href='editItem.php'>Izmeni podatke</a>";
-                        }else{
-                            echo "<a href='editItem.php?id={$id}'>Nemate</a> pravo izmene podataka!";
+                <li><a href="">Poruci</a><input type="number" min="1" max="10" value="1"></li>
+                <br />
+                <br />
+                <li><a href="ouroffer.php">Vrati se na ponudu.</a></li>
+                <?php
+
+                        if($is_admin == 1) {
+                            //echo "<li>";
+                            echo "<a href='editItem.php?id={$id}'>Izmeni</a> prikazani artikal!";
+                            //echo "</li>";
                         }
-                    ?></li>
-                <li><a href="ouroffer.php"><?php htmlspecialchars("< - ");?>Vrati se na listu artikala</a> </li>
+                    ?>
             </ul>
+
+
+
         </div>
+    </div>
+    <div class="sectionShow">
+        <?php
+        if(isset($_SESSION['login'])) {
+            include "adminLinks.php";
+        }
+        ?>
     </div>
 </div>
 

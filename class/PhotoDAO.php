@@ -19,6 +19,36 @@ class PhotoDAO {
         return $results;
     }
 
+    public function showPhotoItems(){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sql = "SELECT * FROM photo WHERE is_item = 1;";
+
+        if (!$results = $connection->query($sql)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
+        }
+
+        return $results;
+    }
+
+    public function showPhotoUsers(){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sql = "SELECT * FROM photo WHERE is_photo = 1;";
+
+        if (!$results = $connection->query($sql)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
+        }
+
+        return $results;
+    }
+
     public function showPhoto($photoid){
 
         $dbConn = new DbConnection();
@@ -26,7 +56,7 @@ class PhotoDAO {
 
         $sqlphoto = "SELECT * FROM photo WHERE id = {$photoid}";
         if (!$resultsphoto = $connection->query($sqlphoto)){
-            die('Ne mogu da izvrsim upit1 zbog ['. $connection->error
+            die('Ne mogu da izvrsim upit --showPhoto-- 1 zbog ['. $connection->error
                 . "]");
         }
 
@@ -36,18 +66,18 @@ class PhotoDAO {
 
     }
 
-    public function editOne($oneid, $desc){
+    public function editOne($oneidf, $descf, $is_itemf, $is_photof){
 
         $dbConn = new DbConnection();
         $connection = $dbConn->connectToDB();
 
-        $id = $oneid;
+        $id = $oneidf;
 
         /*
          * Upis u photo tabelu
          */
         // 1. prepared SQL statement
-        if($sqlup = $connection->prepare("UPDATE photo SET description = ? WHERE id = {$id}")){
+        if($sqlup = $connection->prepare("UPDATE photo SET description = ?, is_item = ?, is_photo = ? WHERE id = {$id}")){
 
             // 3. params
             /*
@@ -56,12 +86,16 @@ class PhotoDAO {
              * $oneid, $desc
              */
             //$id = $oneid;
-            $desc = $desc;
+            $desc = $descf;
+            $is_item = $is_itemf;
+            $is_photo = $is_photof;
 
             //2. binding params
             $sqlup->bind_param(
-                's',
-                $desc
+                'sii',
+                $desc,
+                $is_item,
+                $is_photo
             );
 
             //4.  execute statement
@@ -70,17 +104,17 @@ class PhotoDAO {
             // 5. Pre close() koraci 3. i 4. mogu ici vise puta!
             $sqlup->close();
 
-            printf ("Izmenjeni podaci o fotki <b>" . $oneid . " " . $desc . " </b>uspesno upisani u bazu podataka.");
+            printf ("Izmenjeni podaci o fotki <b>" . $id . " " . $desc . " </b>uspesno upisani u bazu podataka.");
 
         } else {
             $error = $connection->errno . ' ' . $connection->error;
             echo $error; // 1054 Unknown column 'foo' in 'field list'
         }
 
-        $sqledit = "SELECT * FROM photo WHERE id = {$oneid};";
+        $sqledit = "SELECT * FROM photo WHERE id = {$id};";
 
         if (!$resultedit = $connection->query($sqledit)){
-            die('Ne mogu da izvrsim upit2 zbog ['. $connection->error
+            die('Ne mogu da izvrsim upit editPhoto 2 zbog ['. $connection->error
                 . "]");
         }
 

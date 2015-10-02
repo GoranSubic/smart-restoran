@@ -13,7 +13,7 @@ class LoginDAO {
 
 
     /***for registration process ***/
-    public function reg_user($name, $secname, $email, $password){
+    public function reg_user($name, $secname, $email, $password, $jbg, $phone, $mphone, $image_url){
 
         $dbConn = new DbConnection();
         $connection = $dbConn->connectToDB();
@@ -27,7 +27,8 @@ class LoginDAO {
 
         //if the email is not in db then insert to the table
         if($count_row == 0){
-            $sql1 = "INSERT INTO user SET name = '$name', secname = '$secname', email = '$email', passwd = '$password';";
+            $sql1 = "INSERT INTO user SET name = '$name', secname = '$secname', email = '$email', passwd = '$password', ";
+            $sql1 .= " jbg = '$jbg', phone = '$phone', mphone = '$mphone', image_url = '$image_url';";
 
             if (!$results1 = $connection->query($sql1)){
                 die('Ne mogu da izvrsim upit user zbog ['. $connection->error
@@ -35,7 +36,7 @@ class LoginDAO {
             }
 
 
-            //Provera poslednje inserovanog user.id
+            //Provera poslednje insertovanog user.id
             $id = mysqli_insert_id($connection);
             /*$sql_max = "SELECT MAX(id) FROM user";
             if(!$results = $connection->query($sql_max)){
@@ -66,6 +67,8 @@ class LoginDAO {
      * Pokusaj da napravim login odavde
      *
      * umesto sa stranice login.php
+     *
+     * Na ovaj nacin u oba slucaja vraca na loginPage.php
      */
     public function login(){
         if (isset($_REQUEST['submit'])) {
@@ -81,14 +84,36 @@ class LoginDAO {
                 $user->getPasswd()
             );
 
-            if ($login) {
+            /*** Code from login.php ***/
+
+            if($login === 1){
+                //Registration Success
+                header("location:adminPage.php");
+            }
+            if($login === 2){
                 //Registration Success
                 header("location:ouroffer.php");
+            }
+            if($login === 0){
+                //Registration Failed
+                $response = '<h3 style="color:indianred">Wrong email or password!</h3>';
+                header("location:header.php?response={$response}");
+            }
+
+
+
+            /**** to ****/
+           /* if ($login) {
+                //Registration Success
+                //header("location:ouroffer.php");
+                $response = '<h3 style="color:indianred">You are logged in!</h3>';
+                echo $response;
             } else {
                 //Registration Failed
                 $response = '<h3 style="color:indianred">Wrong email or password!</h3>';
-                header("location:loginPage.php?response={$response}");
-            }
+                echo $response;
+            }*/
+
         }
     }
 
@@ -100,7 +125,10 @@ class LoginDAO {
         $connection = $dbConn->connectToDB();
 
         $password = md5($password);
-        $sql2 = "SELECT id from user WHERE email = '$email' AND passwd = '$password'";
+        $sql2 = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
+        $sql2 .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql2 .= " staff.salary, staff.user_id, staff.work_place ";
+        $sql2 .= " from user JOIN staff ON user.id = staff.user_id WHERE email = '$email' AND passwd = '$password'";
 
         //checking if the email is available in the table
         if (!$result = $connection->query($sql2)){
@@ -116,11 +144,44 @@ class LoginDAO {
             //this login var will use for the session thing
             $_SESSION['login'] = true;
             $_SESSION['id'] = $user_data['id'];
-            return true;
+            $_SESSION['name'] = $user_data['name'];
+            $_SESSION['email'] = $user_data['email'];
+            $_SESSION['is_admin'] = $user_data['is_admin'];
+
+            if($_SESSION['is_admin'] == TRUE){
+                return $useris = 1;
+            }else{
+                return $useris = 2;
+            }
         }
         else{
-            return false;
+            return $useris = 0;
         }
+    }
+
+    /*** for showing the user ***/
+    public function get_fullname($uid){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sql3 = "SELECT fullname FROM users WHERE id = {$uid}";
+        if (!$result = $connection->query($sql3)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
+        }
+        $resultrow = $result->fetch_assoc();
+        echo $resultrow['name'];
+    }
+
+    /**** starting the session ***/
+    public function get_session(){
+        return $_SESSION['login'];
+    }
+
+    public function user_logout(){
+        $_SESSION['login'] = FALSE;
+        session_destroy();
     }
 
 } 

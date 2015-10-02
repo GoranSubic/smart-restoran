@@ -1,5 +1,20 @@
 <?php
-include "header.php";
+session_start();
+if(isset($_SESSION['login'])) {
+    $id = $_SESSION['id'];
+    $name = $_SESSION['name'];
+    $is_admin = $_SESSION['is_admin'];
+}else{
+    $is_admin = 0;
+}
+
+if($_SESSION['is_admin'] == 1){
+    echo "Dobro dosao {$_SESSION['name']} na stranicu {$_SERVER['PHP_SELF']}";
+}else{
+    header("Location:ouroffer.php");
+}
+
+include "headeradmin.php";
 
 
 

@@ -10,7 +10,29 @@ class UserDAO {
         $dbConn = new DbConnection();
         $connection = $dbConn->connectToDB();
 
-        $sql = "SELECT * FROM user JOIN staff ON user.id = staff.user_id WHERE 1;";
+        $sql = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
+        $sql .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql .= " staff.salary, staff.user_id, staff.work_place ";
+        $sql .= " FROM user JOIN staff ON user.id = staff.user_id WHERE 1;";
+
+        if (!$results = $connection->query($sql)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
+        }
+
+        return $results;
+    }
+
+
+    public function showUser($id){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sql = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
+        $sql .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql .= " staff.salary, staff.user_id, staff.work_place ";
+        $sql .= " FROM user JOIN staff ON user.id = staff.user_id WHERE user.id = {$id};";
 
         if (!$results = $connection->query($sql)){
             die('Ne mogu da izvrsim upit zbog ['. $connection->error
@@ -179,7 +201,18 @@ class UserDAO {
             $secname = 'FixnoIme';
             $jbg = $jbgf;
             $email = $emailf;
-            $passwd = $passwdf;
+            if($passwdf != ''){
+                $passwd = md5($passwdf);
+            }else{
+                $sqlpass = "SELECT passwd FROM user WHERE id={$idf}";
+                if (!$results = $connection->query($sqlpass)){
+                    die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                        . "]");
+                }
+                $rowpass = $results->fetch_assoc();
+                $passwd = md5($rowpass['passwd']);
+                //$passwd = $rowpass['passwd'];
+            }
             $phone = $phonef;
             $mphone = $mphonef;
             $is_staff = $is_stafff;

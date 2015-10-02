@@ -5,6 +5,8 @@ class Photo {
     protected $id;
     protected $title;
     protected $description;
+    protected $is_item;
+    protected $is_photo;
 
     public function __constructor(){
 
@@ -32,6 +34,21 @@ class Photo {
 
     public function getDescription(){
         return $this->description;
+    }
+
+    public function setIsItem($is_item){
+        $this->is_item = $is_item;
+    }
+    public function getIsItem(){
+        return $this->is_item;
+    }
+
+    public function setIsPhoto($is_photo){
+        $this->is_photo = $is_photo;
+    }
+
+    public function getIsPhoto(){
+        return $this->is_photo;
     }
 
 } 

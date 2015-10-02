@@ -5,29 +5,7 @@ include "class/PhotoDAO.php";
 include "class/Photo.php";
 
 $photoDao = new PhotoDAO();
-$showPhotos = $photoDao->showPhotos();
-
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-
-    $photoObj = new Photo();
-
-    if(isset($_POST['is_item'])){ $is_item = '1'; } else { $is_item = '0'; }
-    if(isset($_POST['is_photo'])){ $is_photo = '1'; } else { $is_photo = '0'; }
-
-    $photoObj->setID($_POST['id']);
-    $photoObj->setDescription($_POST['description']);
-    $photoObj->setIsItem($is_item);
-    $photoObj->setIsPhoto($is_photo);
-
-    $rowphoto = $photoDao->editOne(
-        $photoObj->getId(),
-        $photoObj->getDescription(),
-        $photoObj->getIsItem(),
-        $photoObj->getIsPhoto()
-    );
-
-}
-
+$showPhotos = $photoDao->showPhotoUsers();
 
 ?>
 

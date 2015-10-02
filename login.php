@@ -19,13 +19,18 @@ if (isset($_REQUEST['submit'])){
         $user->getPasswd()
     );
 
-    if($login){
+    if($login === 1){
+        //Registration Success
+        header("location:adminPage.php");
+    }
+    if($login === 2){
         //Registration Success
         header("location:ouroffer.php");
-    } else {
+    }
+    if($login === 0){
         //Registration Failed
         $response = '<h3 style="color:indianred">Wrong email or password!</h3>';
-        header("location:loginPage.php?response={$response}");
+        header("location:header.php?response={$response}");
     }
 }
 ?>

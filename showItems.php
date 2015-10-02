@@ -1,6 +1,21 @@
 <?php
 
-include "header.php";
+session_start();
+if(isset($_SESSION['login'])) {
+    $id = $_SESSION['id'];
+    $name = $_SESSION['name'];
+    $is_admin = $_SESSION['is_admin'];
+}else{
+    $is_admin = 0;
+}
+
+if($_SESSION['is_admin'] == 1){
+    echo "Dobro dosao {$_SESSION['name']} na stranicu {$_SERVER['PHP_SELF']}";
+}else{
+    header("Location:ouroffer.php");
+}
+
+include "headeradmin.php";
 include "connection/DbConnection.php";
 //require_once "connection/Log.php";
 
@@ -26,16 +41,14 @@ if (!$results = $connection->query($sql)){
 
 echo "<h1>Ukupno u ponudi imamo ". $results->num_rows ." artikala!</h1>";
 
-if(isset($login)) {
-    echo "<a href='editItem.php'>Izmeni podatke</a>";
-}else{
-    echo "<a href='insertItem.php'>Nemate</a> pravo dodavanja podataka!";
+if($_SESSION['is_admin'] == 1) {
+    echo "<a href='insertItem.php'>Dodaj</a> novi artikal";
 }
 
 ?>
 
 <table class="table table-hover datagrid">
-    <tr>
+    <tr style="background-color: chocolate">
         <th>R B</th>
         <th>Naziv artikla</th>
         <th>Detaljniji opis</th>

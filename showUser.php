@@ -1,5 +1,24 @@
 <?php
+//session_start(); //already start in header.php
+//if(isset($_SESSION['login'])){
 include "header.php";
+
+    if(isset($_GET['id'])) {
+        if($_SESSION['is_admin'] == 1){
+            $id = $_GET['id'];
+        }elseif(($_SESSION['id']) == ($_GET['id'])){
+            $id = $_SESSION['id'];
+        }else{
+            //header("Location:ouroffer.php");
+            echo "<h4 style='color:red'>Sta to radite?! Nemate pristup - pregleda drugih korisnika!!!</h4>";
+        }
+    }
+    /*else{
+            echo "Problem sa get metodom!";
+        }*/
+//}
+
+
 include "connection/DbConnection.php";
 include "class/UserDAO.php";
 include "class/Staff.php";
@@ -12,7 +31,8 @@ $userDao = new UserDAO();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $uploaddir = 'C:/xampp/htdocs/smart2015/smart-restoran/photo/user/';
+    $upload_dir_url = "/photo/user";
+    $uploaddir = DIR_LOC.$upload_dir_url."/";
     //$uploaddir = '/smart2015/smart-restoran/photo/user/';
     $uploadfile = $uploaddir . basename($_FILES['pic_1']['name']);
 
@@ -22,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "File is valid, and was successfully uploaded.\n";
 
             $target_file = basename($_FILES['pic_1']['name']);
-            $upload_dir_url = "/photo/user";
+
 
                 $file_name = $target_file;
 
@@ -109,23 +129,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 
+    /*$sql = "SELECT * FROM user JOIN staff ON staff.user_id = user.id WHERE user.id = ".$id;
 
-
-if(isset($_GET['id'])) {
-        $id = $_GET['id'];
-    }
-/*else{
-        echo "Problem sa get metodom!";
+    if (!$results = $connection->query($sql)){
+            die('Ne mogu da izvrsim upit zbog ['. $connection->error
+                . "]");
     }*/
-
-$sql = "SELECT * FROM user JOIN staff ON staff.user_id = user.id WHERE user.id = ".$id;
-
-if (!$results = $connection->query($sql)){
-        die('Ne mogu da izvrsim upit zbog ['. $connection->error
-            . "]");
-    }
-
-    $row = $results->fetch_assoc();
+    $resultsshow = $userDao->showUser($id);
+    $row = $resultsshow->fetch_assoc();
 
 ?>
 
@@ -140,27 +151,24 @@ if (!$results = $connection->query($sql)){
                 <li><?php echo "<h4>Prezime ". $row['secname'] ."</h4>" ?></li>
                 <li><?php echo "<h4>JBG ". $row['jbg'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Email ". $row['email'] ."</h4>" ?></li>
-                <li><?php echo "<h4>Password". $row['passwd'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Password  * * * * *</h4>" ?></li>
                 <li><?php echo "<h4>Telefon". $row['phone'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Mob tel". $row['mphone'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Radnik ". $row['is_staff'] ."</h4>" ?></li>
-                <li><?php echo "<h4>Url fotke". $row['image_url'] ."</h4>" ?></li>
+                <!--li><!--?php echo "<h4>Url fotke". $row['image_url'] ."</h4>" ?></li-->
+                <li><?php echo "<h4>Url fotke http:// ...</h4>" ?></li>
                 <li><?php echo "<h4>ID fotke". $row['photo_id'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Radi u ". $row['work_place'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Plata ". $row['salary'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Admin ". $row['is_admin'] ."</h4>" ?></li>
                 <br />
                 <br />
-                <li><?php
-                        if(isset($login)) {
-                            echo "<a href='editUser.php'>Izmeni podatke korisnika</a>";
-                        }else{
-                            echo "<a href='editUser.php?id={$id}'>Nemate</a> pravo izmene podataka korisnika!";
-                        }
-                    ?></li>
-                <li><a href="showUsers.php"><?php htmlspecialchars("< - ");?>Vrati se na listu svih korisnika</a> </li>
+
             </ul>
         </div>
+        <?php
+            include "adminLinks.php";
+        ?>
     </div>
 </div>
 

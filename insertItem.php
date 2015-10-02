@@ -1,56 +1,26 @@
 <?php
-    include "header.php";
+session_start();
+if(isset($_SESSION['login'])) {
+    $id = $_SESSION['id'];
+    $name = $_SESSION['name'];
+    $is_admin = $_SESSION['is_admin'];
+}else{
+    $is_admin = 0;
+}
+
+if($_SESSION['is_admin'] == 1){
+    echo "Dobro dosao {$_SESSION['name']} na stranicu {$_SERVER['PHP_SELF']}";
+}else{
+    header("Location:ouroffer.php");
+}
+
+include "headeradmin.php";
     include "connection/DbConnection.php";
 
     $dbConn = new DbConnection();
     $connection = $dbConn->connectToDB();
 
-/*   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-     // 1. prepared SQL statement
-      $sqlup = $connection->prepare(
-          "INSERT INTO item (title, description, image_url, price, today_menu, menu) VALUES (?, ?, ?, ?, ?, ?)"
-      );
-
-      //2. binding params
-      $sqlup->bind_param(
-          'ssssii',
-          $title,
-          $description,
-          $image_url,
-          $price,
-          $today_menu,
-          $menu
-          );
-
-      // 3. params
-      $title = $_POST['title'];
-      $description = $_POST['description'];
-      $image_url = $_POST['image_url'];
-      $price = $_POST['price'];
-      if(isset($_POST['menu'])){ $menu = 1; }else{ $menu = 0; }
-      if(isset($_POST['today_menu'])){ $today_menu = 1; }else{ $today_menu = 0; }
-      //$staff_id = $_POST['staff_id'];
-
-      //4.  execute statement
-      $sqlup->execute();
-
-      // 5. Pre close() koraci 3. i 4. mogu ici vise puta!
-      $sqlup->close();
-
-      printf("Novi artikal <b>" . $title . " </b>je uspesno upisan u bazu podataka.");
-
-      /* Kreiranje sql upita bez bind:
-      $sqlup = "INSERT INTO item SET title = '".$title."', description = '".$desc."', price = '".$price."', image_url = '".$image_url."', menu = '".$menu."', today_menu = '".$today_menu."'";
-
-      if (!$resultsup = $connection->query($sqlup)){
-          die('Ne mogu da izvrsim upit zbog ['. $connection->error
-              . "]");
-      }
-
-
-      $id = mysqli_insert_id($connection);
-  }*/
 
 ?>
 

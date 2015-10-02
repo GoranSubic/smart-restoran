@@ -1,5 +1,20 @@
 <?php
 include "header.php";
+
+if(isset($_GET['id'])) {
+    if($_SESSION['is_admin'] == 1){
+        $id = $_GET['id'];
+    }elseif(($_SESSION['id']) == ($_GET['id'])){
+        $id = $_SESSION['id'];
+    }else{
+        //header("Location:ouroffer.php");
+        echo "<h4 style='color:red'>Sta to radite?! Nemate pristup - editovanju drugih korisnika!!!</h4>";
+    }
+}
+/*else{
+        echo "Problem sa get metodom!";
+    }*/
+
 include "connection/DbConnection.php";
 include "class/UserDAO.php";
 include "class/Staff.php";
@@ -18,7 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      * je u bazi upisan photo_id
      * ako nije onda setuje photo 1 kao photo korisnika
      */
-    $uploaddir = 'C:/xampp/htdocs/smart2015/smart-restoran/photo/user/';
+    $upload_dir_url = "/photo/user";
+    $uploaddir = DIR_LOC.$upload_dir_url."/";
     //$uploaddir = '/smart2015/smart-restoran/photo/user/';
     $uploadfile = $uploaddir . basename($_FILES['pic_1']['name']);
 
@@ -28,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "File is valid, and was successfully uploaded.\n";
 
         $target_file = basename($_FILES['pic_1']['name']);
-        $upload_dir_url = "/photo/user";
+
 
         $file_name = $target_file;
 
@@ -132,21 +148,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 
-if(isset($_GET['id'])) {
-    $id = $_GET['id'];
-}
-/*else{
-        echo "Problem sa get metodom!";
-    }*/
 
-$sql = "SELECT * FROM user JOIN staff ON staff.user_id = user.id WHERE user.id = ".$id;
+
+/*$sql = "SELECT * FROM user JOIN staff ON staff.user_id = user.id WHERE user.id = ".$id;
 
 if (!$results = $connection->query($sql)){
     die('Ne mogu da izvrsim upit zbog ['. $connection->error
         . "]");
 }
 
-$row = $results->fetch_assoc();
+$row = $results->fetch_assoc();*/
+
+$resultsshow = $userDao->showUser($id);
+$row = $resultsshow->fetch_assoc();
 
 ?>
 
@@ -163,7 +177,7 @@ $row = $results->fetch_assoc();
                 Prezime: <input type="text" name="secondname" value="<?php echo $row['secname']; ?>"><br />
                 Br. dok: <input type="text" name="jbg" value="<?php echo $row['jbg']; ?>"><br />
                 E-mail: <input type="email" name="email" value="<?php echo $row['email']; ?>"><br />
-                Sifra: <input type="text" name="passwd" value="<?php echo $row['passwd']; ?>"><br />
+                Sifra: <input type="text" name="passwd" value="" placeholder="Ako zelite unesite novu..."><br /> <!--placeholder="Ako zelite unesite novu..."-->
                 Telefon: <input type="tel" name="phone" value="<?php echo $row['phone']; ?>"><br />
                 Mob tel: <input type="tel" name="mphone" value="<?php echo $row['mphone']; ?>"><br />
                 Radnik: <input type="checkbox" name="is_staff" value="" <?php if($row['is_staff'] == true) echo "checked"; ?> ><br />
@@ -178,7 +192,14 @@ $row = $results->fetch_assoc();
                 <br />
 
                 <input type="submit" name="submit" value="Upisi"><br /><br />
-                <a href="showUsers.php">Vrati se na listu korisnika</a>
+
+                    <a href="showUser.php?=<?php echo $row['id']; ?>">Vrati se na prikaz podataka</a><br /><br />
+
+                <?php
+                    if($is_admin == 1) {
+                        echo "<a href='showUsers.php'>Vrati se na listu korisnika</a>";
+                    }
+                ?>
             </form>
 
         </div>
