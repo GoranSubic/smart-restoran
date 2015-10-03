@@ -3,6 +3,7 @@ session_start();
 if(isset($_SESSION['login'])) {
     $id = $_SESSION['id'];
     $name = $_SESSION['name'];
+    $emailsession = $_SESSION['email'];
     $is_admin = $_SESSION['is_admin'];
 }else{
     $is_admin = 0;

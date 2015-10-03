@@ -2,6 +2,7 @@
 
 include "header.php";
 include "connection/DbConnection.php";
+include "class/OrderDAO.php";
 //require_once "connection/Log.php";
 
 $dbConn = new DbConnection();
@@ -9,7 +10,6 @@ $connection = $dbConn->connectToDB();
 
 //$logger = new Log();
 
-//$item_id_arr = array($item_id => $item_id_col);
 if(isset($_GET['submit'])){
     if(isset($_SESSION['login'])){
         $item_arr = array();
@@ -53,7 +53,6 @@ if (!$results = $connection->query($sql)){
     die('Ne mogu da izvrsim upit zbog ['. $connection->error
         . "]");
 }
-
 ?>
 
 <div class="main container-fluid">
@@ -75,7 +74,6 @@ if (!$results = $connection->query($sql)){
                     }
                     $n++;
                 }
-
             }
 
         //print_r($new_array);
@@ -83,7 +81,6 @@ if (!$results = $connection->query($sql)){
         //echo "<br />Ukupno ima {$lenght} zapisa u porudzbini";
         if((isset($new_array)) && (!empty($new_array))) {
             ?>
-
             <table class="table datagrid">
                 <tr style="background-color: chocolate">
                     <th>ID</th>
@@ -93,8 +90,33 @@ if (!$results = $connection->query($sql)){
                     <th>Vrednost</th>
                 </tr>
 
-
                 <?php
+
+                /****** Upis porudzbine u bazu ******/
+                $o = 0;
+                foreach ($new_array as $new_array_row) {
+                    if ($new_array_row[2] <> 0) {
+                        $id_item[$o] = $new_array_row[0];
+                        $price_uo[$o] = $new_array_row[1];
+                        $col_write[$o] = $new_array_row[2];
+
+                        $id_uo[$o] = $_SESSION['id'];
+
+                        $order = new OrderDAO();
+                        $order_array[$o] = array($id_item[$o], $price_uo[$o], $col_write[$o], $id_uo[$o]);
+                            //$order->writeOrder($id_item[$o], $col_write[$o], $id_uo, $price_uo[$o]);
+                        $o++;
+                    }
+                }
+                if(isset($order_array)) {
+                    $order_results = $order->writeOrder($order_array);
+                    //print_r($order_array);
+
+                    echo "<br /><h5 style='color: #8b0000'>Kreirana porudzbina broj {$order_results}</h5>";
+                }
+
+                /***** Prikaz porudzbine na ekran  ******/
+                $foremail = "<br />Porudzbina sadrzi sledece podatke: <br />";
                 $value_all = 0;
                 foreach ($new_array as $new_array_row) {
                     echo "<tr>";
@@ -104,12 +126,14 @@ if (!$results = $connection->query($sql)){
                         echo "</td><td>";
                         echo $new_array_row[3];
                         echo "</td><td>";
-                        echo $new_array_row[2];
-                        echo "</td><td>";
                         echo $new_array_row[1];
+                        echo "</td><td>";
+                        echo $new_array_row[2];
                         echo "</td><td>";
                         echo $valu_one = $new_array_row[1] * $new_array_row[2];
                         echo "</td>";
+
+                        $foremail .=  "<br /> ". $new_array_row[0] ." - ". $new_array_row[3] ." - ". $new_array_row[1] ." - ". $new_array_row[2] ."kom <br /> ";
 
                         echo "</tr>";
                         if(isset($valu_one)) {
@@ -117,13 +141,15 @@ if (!$results = $connection->query($sql)){
                         }
                     }
                 }
+
+                $foremail .= "<br /><h4 style='color:#8b0000'>Poručili ste hranu u vrednosti: {$value_all},00 din.</h4>";
+
                 if ((isset($value_all)) && ($value_all > 0)) {
                     echo "<br /><h4 style='color:#8b0000'>Poručili ste hranu u vrednosti: {$value_all},00 din.</h4>";
+
+                    $order->sendEmail($foremail);
                 }
-
                 ?>
-
-
             </table>
 
         <?php
@@ -168,11 +194,8 @@ if (!$results = $connection->query($sql)){
     <?php } ?>
 
 </form>
-
 </div>
-
 <?php
 include "footer.php";
 //$logger->WriteLog($logger->dataToLog);
 ?>
-
