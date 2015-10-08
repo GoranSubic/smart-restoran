@@ -39,14 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //if(isset($_POST['pic_1'])){
         if (move_uploaded_file($_FILES['pic_1']['tmp_name'], $uploadfile)) {
 
-            echo "File is valid, and was successfully uploaded.\n";
+            //echo "File is valid, and was successfully uploaded.\n";
 
             $target_file = basename($_FILES['pic_1']['name']);
-
-
                 $file_name = $target_file;
-
-                $target_file_url = "http://localhost/smart2015/smart-restoran".$upload_dir_url."/".$target_file;
+                $target_file_url = URL_PROJECT.$upload_dir_url."/".$target_file;
 
 
                 $photo = new Photo();
@@ -61,17 +58,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $photo_id = mysqli_insert_id($connection);
                 echo "Photo ID posle inserta iznosi: {$photo_id}";
             }else{
-                echo "Sorry, there was an error uploading your file.";
-            echo '<pre>';
+                echo "Postoji problem ili niste odabrali sliku za svoj profil.<br />";
+                echo "Možete upload-ovati fotku kada to budete želeli.<br />";
+            /*echo '<pre>';
             echo "Possible file upload attack!\n";
             echo 'Here is some more debugging info:';
             print_r($_FILES);
 
-            print "</pre>";
+            print "</pre>";*/
 
                 $photo_id = '1';
-                $target_file_url = "http://localhost/smart2015/smart-restoran/photo/user/Indian_Spices.jpg";
-                echo "Setovani na 1 Photo ID iznosi: {$photo_id}";
+                $sqlphoto = "SELECT title FROM photo WHERE id={$photo_id};";
+                    if(!$resultphoto = $connection->query($sqlphoto)){
+                        die('Ne mogu da izvrsim upit za proveru naziva fotke 1 zbog [' . $connection->error
+                            . "]");
+                    }
+                $rowphoto = $resultphoto->fetch_assoc();
+                $target_file_url = URL_PROJECT.$upload_dir_url."/".$rowphoto['title'];
+                //echo "<br />Setovani na 1 Photo ID iznosi: {$photo_id} <br />Photo title is: {$rowphoto['title']}<br />";
+                //echo "And file url je: ".$target_file_url;
             }
 
 
@@ -81,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if($_POST['image_url'] != ''){
         $image_url = $_POST['image_url'];
-        echo "<br />Postovani Image url of photo: $image_url";
+        //echo "<br />Postovani Image url of photo: $image_url";
     }else{
         $sqlurl = "SELECT title FROM photo WHERE photo.id={$photo_id}";
         if (!$results = $connection->query($sqlurl)){
@@ -90,6 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $rowurl = $results->fetch_assoc();
         $photo_title = $rowurl['title'];
+        //print_r("Photo title is: ".$photo_title.", photo_id je: ".$photo_id."<br />");
         $image_url = $target_file_url;
     }
 
@@ -98,6 +104,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $staff->setName($_POST['name']);
     $staff->setSecName($_POST['secondname']);
+    $staff->setAdress($_POST['adress']);
+    $staff->setCity($_POST['city']);
     $staff->setJbg($_POST['jbg']);
     $staff->setEmail($_POST['email']);
     $staff->setPasswd($_POST['passwd']);
@@ -113,6 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $userDao->createStafs(
         $staff->getName(),
         $staff->getSecName(),
+        $staff->getAdress(),
+        $staff->getCity(),
         $staff->getJbg(),
         $staff->getEmail(),
         $staff->getPasswd(),
@@ -127,14 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     );
 
 }
-
-
-    /*$sql = "SELECT * FROM user JOIN staff ON staff.user_id = user.id WHERE user.id = ".$id;
-
-    if (!$results = $connection->query($sql)){
-            die('Ne mogu da izvrsim upit zbog ['. $connection->error
-                . "]");
-    }*/
+    //print_r("ID nakon createStafs iznosi: ".$id);
     $resultsshow = $userDao->showUser($id);
     $row = $resultsshow->fetch_assoc();
 
@@ -149,18 +152,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <ul class="ulindex">
                 <li><?php echo "<h1>Ime ". $row['name'] ."</h1>" ?></li>
                 <li><?php echo "<h4>Prezime ". $row['secname'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Adresa ". $row['adress'] ."</h4>" ?></li>
+                <li><?php echo "<h4>Grad ". $row['city'] ."</h4>" ?></li>
                 <li><?php echo "<h4>JBG ". $row['jbg'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Email ". $row['email'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Password  * * * * *</h4>" ?></li>
                 <li><?php echo "<h4>Telefon". $row['phone'] ."</h4>" ?></li>
                 <li><?php echo "<h4>Mob tel". $row['mphone'] ."</h4>" ?></li>
-                <li><?php echo "<h4>Radnik ". $row['is_staff'] ."</h4>" ?></li>
+
+                <?php if($_SESSION['is_admin'] == 1){ ?>
+                    <li><?php echo "<h4>Radnik ". $row['is_staff'] ."</h4>" ?></li>
+                <?php } ?>
+
                 <!--li><!--?php echo "<h4>Url fotke". $row['image_url'] ."</h4>" ?></li-->
                 <li><?php echo "<h4>Url fotke http:// ...</h4>" ?></li>
                 <li><?php echo "<h4>ID fotke". $row['photo_id'] ."</h4>" ?></li>
-                <li><?php echo "<h4>Radi u ". $row['work_place'] ."</h4>" ?></li>
-                <li><?php echo "<h4>Plata ". $row['salary'] ."</h4>" ?></li>
-                <li><?php echo "<h4>Admin ". $row['is_admin'] ."</h4>" ?></li>
+
+                <?php if($_SESSION['is_admin'] == 1){ ?>
+                    <li><?php echo "<h4>Radi u ". $row['work_place'] ."</h4>" ?></li>
+                    <li><?php echo "<h4>Plata ". $row['salary'] ."</h4>" ?></li>
+                    <li><?php echo "<h4>Admin ". $row['is_admin'] ."</h4>" ?></li>
+                <?php } ?>
+
                 <br />
                 <br />
 

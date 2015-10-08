@@ -32,6 +32,8 @@ include "headeradmin.php";
                 <!--input type="hidden" name="id" value="<!--?php if(isset($id)) echo $id; ?>"-->
                 Ime: <input type="text" name="name" value=""><br />
                 Prezime: <input type="text" name="secondname" value=""><br />
+                Adresa: <input type="text" name="adress" value=""><br />
+                Grad: <input type="text" name="city" value=""><br />
                 Br. dok: <input type="text" name="jbg" value=""><br />
                 E-mail: <input type="email" name="email" value=""><br />
                 Sifra: <input type="text" name="passwd" value=""><br />

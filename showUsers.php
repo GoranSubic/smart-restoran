@@ -38,7 +38,7 @@ $showUsers = $userDao->showUsers();
                 <th style=>I D</th>
                 <th>Ime</th>
                 <th>Prezime</th>
-                <!--th>JBG</th-->
+                <th>Adresa</th>
                 <th>Email</th>
                 <!--th>Password</th-->
                 <!--th>Telefon</th-->
@@ -58,7 +58,7 @@ $showUsers = $userDao->showUsers();
                         <td><?php echo "<a href='showUser.php?id={$row['id']}'> ".$row['id']."</a>"; ?></td>
                         <td><?php echo $row['name'] ?></td>
                         <td><?php echo $row['secname'] ?></td>
-                        <!--td><!--?php echo $row['jbg'] ?></td-->
+                        <td><?php echo $row['adress'] ?></td>
                         <td><?php echo $row['email'] ?></td>
                         <!--td><!--?php echo $row['passwd'] ?></td-->
                         <!--td><!--?php echo $row['phone'] ?></td-->

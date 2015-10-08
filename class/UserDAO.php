@@ -11,7 +11,7 @@ class UserDAO {
         $connection = $dbConn->connectToDB();
 
         $sql = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
-        $sql .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql .= " user.secname, user.adress, user.city, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
         $sql .= " staff.salary, staff.user_id, staff.work_place ";
         $sql .= " FROM user JOIN staff ON user.id = staff.user_id WHERE 1;";
 
@@ -30,7 +30,7 @@ class UserDAO {
         $connection = $dbConn->connectToDB();
 
         $sql = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
-        $sql .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql .= " user.secname, user.adress, user.city, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
         $sql .= " staff.salary, staff.user_id, staff.work_place ";
         $sql .= " FROM user JOIN staff ON user.id = staff.user_id WHERE user.id = {$id};";
 
@@ -49,9 +49,9 @@ class UserDAO {
      * Function for creating User with all parrams + Staff data
      *
      */
-    public function createStafs($namef, $secnamef, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf){
+    public function createStafs($namef, $secnamef, $adressf, $cityf, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf){
 
-        echo "Ulazni parametri su : namef - ".$namef." secnamef - ".$secnamef." - jbg - ".$jbgf."<br /><br />";
+        //echo "Ulazni parametri su : namef - ".$namef." secnamef - ".$secnamef." - jbg - ".$jbgf."<br /><br />";
 
         //public $id;
         $dbConn = new DbConnection();
@@ -63,7 +63,7 @@ class UserDAO {
          *
          */
         // 1. prepraed SQL statement
-        if($sqlup = $connection->prepare("INSERT INTO user ( name, secname, jbg, email, passwd, phone, mphone, is_staff, image_url, photo_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)") ){
+        if($sqlup = $connection->prepare("INSERT INTO user ( name, secname, adress, city, jbg, email, passwd, phone, mphone, is_staff, image_url, photo_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)") ){
 
             // 3. params
             /*
@@ -72,10 +72,12 @@ class UserDAO {
              * $namef, $secnamef, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf
              */
             $name = $namef;
-            $secname = 'FixnoPrezime';
+            $secname = $secnamef;
+            $adress = $adressf;
+            $city = $cityf;
             $jbg = $jbgf;
             $email = $emailf;
-            $passwd = $passwdf;
+            $passwd = md5($passwdf);
             $phone = $phonef;
             $mphone = $mphonef;
             $is_staff = $is_stafff;
@@ -84,9 +86,11 @@ class UserDAO {
 
             //2. binding params
             $sqlup->bind_param(
-                'sssssssisi',
+                'sssssssssisi',
                 $name,
                 $secname,
+                $adress,
+                $city,
                 $jbg,
                 $email,
                 $passwd,
@@ -105,13 +109,13 @@ class UserDAO {
 
             //Provera poslednje inserovanog user.id
             //$id = mysqli_insert_id($connection);
-            $sql_max = "SELECT MAX(id) FROM user";
+            $sql_max = "SELECT MAX(id) as mid FROM user";
             if(!$results = $connection->query($sql_max)){
                 die("Doslo je do greske u upitu za proveru max user.id: " . $connection->error );
             }
             $maxrow = $results->fetch_assoc();
-            $id = $maxrow['MAX(id)'];
-            printf ("Novi korisnik <b>" . $id . " " . $name . " " . $secname . " </b>je uspesno upisan u bazu podataka.");
+            $id = $maxrow['mid'];
+            //printf ("Novi korisnik <b>" . $id . " " . $name . " " . $secname . " </b>je uspesno upisan u bazu podataka.");
 
 
         } else {
@@ -174,9 +178,9 @@ class UserDAO {
      * Function for editing User with all parrams + Staff data
      *
      */
-    public function editStafs($idf, $namef, $secnamef, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf){
+    public function editStafs($idf, $namef, $secnamef, $adressf, $cityf, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf){
 
-        echo "Ulazni parametri su : idf - ".$idf." namef - ".$namef." secnamef - ".$secnamef." - jbg - ".$jbgf."<br /><br />";
+        //echo "Ulazni parametri su : idf - ".$idf." namef - ".$namef." secnamef - ".$secnamef." - jbg - ".$jbgf."<br /><br />";
 
         $id = $idf;
         $dbConn = new DbConnection();
@@ -188,7 +192,7 @@ class UserDAO {
          *
          */
         // 1. prepraed SQL statement
-        if($sqlup = $connection->prepare("UPDATE user SET name=?, secname=?, jbg=?, email=?, passwd=?, phone=?, mphone=?, is_staff=?, image_url=?, photo_id=? WHERE id= {$idf};")){
+        if($sqlup = $connection->prepare("UPDATE user SET name=?, secname=?, adress=?, city=?, jbg=?, email=?, passwd=?, phone=?, mphone=?, is_staff=?, image_url=?, photo_id=? WHERE id= {$idf};")){
 
             // 3. params
             /*
@@ -198,7 +202,9 @@ class UserDAO {
              */
             //$id = $idf;
             $name = $namef;
-            $secname = 'FixnoIme';
+            $secname = $secnamef;
+            $adress = $adressf;
+            $city = $cityf;
             $jbg = $jbgf;
             $email = $emailf;
             if($passwdf != ''){
@@ -210,8 +216,9 @@ class UserDAO {
                         . "]");
                 }
                 $rowpass = $results->fetch_assoc();
-                $passwd = md5($rowpass['passwd']);
-                //$passwd = $rowpass['passwd'];
+                //$passwd = md5($rowpass['passwd']);
+                /*** Ne smem da uradim md5 postojeceg password-a!!! ***/
+                $passwd = $rowpass['passwd'];
             }
             $phone = $phonef;
             $mphone = $mphonef;
@@ -221,9 +228,11 @@ class UserDAO {
 
             //2. binding params
             $sqlup->bind_param(
-                'sssssssisi',
+                'sssssssssisi',
                 $name,
                 $secname,
+                $adress,
+                $city,
                 $jbg,
                 $email,
                 $passwd,
@@ -240,7 +249,7 @@ class UserDAO {
             // 5. Pre close() koraci 3. i 4. mogu ici vise puta!
             $sqlup->close();
 
-            printf ("Izmenjeni podaci o korisniku <b>" . $id . " " . $name . " " . $secname . " </b>uspesno upisani u bazu podataka.");
+            echo "Izmenjeni podaci o korisniku <b>" . $id . " " . $name . " " . $secname . " i uspesno upisani u bazu podataka.";
 
         } else {
             $error = $connection->errno . ' ' . $connection->error;

@@ -13,12 +13,12 @@ class LoginDAO {
 
 
     /***for registration process ***/
-    public function reg_user($name, $secname, $email, $password, $jbg, $phone, $mphone, $image_url){
+    public function reg_user($name, $secname, $adress, $city, $email, $passwordf, $jbg, $phone, $mphone, $image_url){
 
         $dbConn = new DbConnection();
         $connection = $dbConn->connectToDB();
 
-        $password = md5($password);
+        $password = md5($passwordf);
         $sql = "SELECT * FROM user WHERE email = '$email';";//OR uname = '$username';";
 
         //checking if the username or email is available in db
@@ -27,7 +27,7 @@ class LoginDAO {
 
         //if the email is not in db then insert to the table
         if($count_row == 0){
-            $sql1 = "INSERT INTO user SET name = '$name', secname = '$secname', email = '$email', passwd = '$password', ";
+            $sql1 = "INSERT INTO user SET name = '$name', secname = '$secname', adress = '$adress', city = '$city', email = '$email', passwd = '$password', ";
             $sql1 .= " jbg = '$jbg', phone = '$phone', mphone = '$mphone', image_url = '$image_url';";
 
             if (!$results1 = $connection->query($sql1)){
@@ -70,7 +70,7 @@ class LoginDAO {
      *
      * Na ovaj nacin u oba slucaja vraca na loginPage.php
      */
-    public function login(){
+    /*public function login(){
         if (isset($_REQUEST['submit'])) {
             extract($_REQUEST);
 
@@ -84,8 +84,8 @@ class LoginDAO {
                 $user->getPasswd()
             );
 
-            /*** Code from login.php ***/
-
+     */       /*** Code from login.php ***/
+/*
             if($login === 1){
                 //Registration Success
                 header("location:adminPage.php");
@@ -100,7 +100,7 @@ class LoginDAO {
                 header("location:header.php?response={$response}");
             }
 
-
+*/
 
             /**** to ****/
            /* if ($login) {
@@ -114,8 +114,8 @@ class LoginDAO {
                 echo $response;
             }*/
 
-        }
-    }
+ //       }
+ //   }
 
 
     /*** for login process ***/
@@ -124,14 +124,15 @@ class LoginDAO {
         $dbConn = new DbConnection();
         $connection = $dbConn->connectToDB();
 
-        $password = md5($password);
-        $sql2 = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
-        $sql2 .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
-        $sql2 .= " staff.salary, staff.user_id, staff.work_place ";
-        $sql2 .= " from user JOIN staff ON user.id = staff.user_id WHERE email = '$email' AND passwd = '$password'";
+        $password1 = md5($password);
+        $sql4 = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
+        $sql4 .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql4 .= " staff.salary, staff.user_id, staff.work_place ";
+        $sql4 .= " from user JOIN staff ON user.id = staff.user_id WHERE user.email = '{$email}' AND user.passwd = '{$password1}'";
 
+        var_dump($sql4);
         //checking if the email is available in the table
-        if (!$result = $connection->query($sql2)){
+        if (!$result = $connection->query($sql4)){
             die('Ne mogu da izvrsim upit zbog ['. $connection->error
                 . "]");
         }

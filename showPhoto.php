@@ -40,5 +40,10 @@ if(isset($_GET['photoid'])){
 <a href="showPhotos.php">Vrati se na pregled svih fotki iz baze</a>
 
 <br /><br />
-
-<img src="/smart2015/smart-restoran/photo/item/<?php echo $rowphoto['title']; ?>" style="width:90%; height:90%; float: inherit" alt="Item Photo">
+<!-- $local_url = LOCAL_URL; -->
+<?php if($rowphoto['is_item'] == 1){ ?>
+<img src= "<?php echo LOCAL_URL; ?>/photo/item/<?php echo $rowphoto['title']; ?>" style="width:90%; height:90%; float: inherit" alt="Item Photo">
+<?php }else{ ?>
+<!--?php if($rowphoto['is_photo'] == 1){ ?-->
+    <img src= "<?php echo LOCAL_URL; ?>/photo/user/<?php echo $rowphoto['title']; ?>" style="width:90%; height:90%; float: inherit" alt="Item Photo">
+<?php } ?>

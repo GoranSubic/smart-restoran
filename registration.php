@@ -13,6 +13,8 @@ if(isset($_REQUEST['submit'])){
     $user = new User();
     $user->setName($_POST['name']);
     $user->setSecName($_POST['secname']);
+    $user->setAdress($_POST['adress']);
+    $user->setCity($_POST['city']);
     $user->setEmail($_POST['email']);
     $user->setPasswd($_POST['passwd']);
     $user->setJbg($_POST['jbg']);
@@ -24,6 +26,8 @@ if(isset($_REQUEST['submit'])){
     $register = $signup->reg_user(
         $user->getName(),
         $user->getSecName(),
+        $user->getAdress(),
+        $user->getCity(),
         $user->getEmail(),
         $user->getPasswd(),
         $user->getJbg(),
@@ -76,6 +80,14 @@ if(isset($_REQUEST['submit'])){
             <tr>
                 <th>Prezime:</th>
                 <td><input type="text" name="secname" required="" /><span style="color:darkred">*</span></td>
+            </tr>
+            <tr>
+                <th>Adresa:</th>
+                <td><input type="text" name="adress" required="" /><span style="color:darkred">*</span></td>
+            </tr>
+            <tr>
+                <th>Grad:</th>
+                <td><input type="text" name="city" required="" /><span style="color:darkred">*</span></td>
             </tr>
             <tr>
                 <th>Email:</th>

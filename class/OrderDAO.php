@@ -1,19 +1,67 @@
 <?php
 
 include "class.phpmailer.php";
+include_once "connection/db_config.php";
+
 class OrderDAO {
+
+    public function orderList(){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sqlmaxuo = "SELECT MAX(userorder.id) as id FROM userorder";
+        if(!$resultmax = $connection->query($sqlmaxuo)){
+            die("<br />Doslo je do greske u upitu za proveru max userorder.id: " . $connection->error );
+        }
+        $rowmax = $resultmax->fetch_assoc();
+        $maxuoid = $rowmax['id'] - COL_NUM;
+
+        //echo "maxuoid iznosi ".$maxuoid;
+
+        $sqllist = "SELECT userorder.id as oid, userorder.order_date as odate, userorder.orderstatus as ostatus, userorder.started as ostarted, userorder.finished as ofinished, ";
+        $sqllist .= "user.name as uname, user.secname as usecname, user.email as uemail, user.adress as uadress, user.city as ucity ";
+        //$sqllist .= "user.email as uemail ";
+        $sqllist .= "FROM userorder, user ";
+        $sqllist .= "WHERE userorder.user_id = user.id ";
+        $sqllist .= "AND userorder.id > {$maxuoid} ";
+        $sqllist .= "ORDER BY userorder.id DESC; ";
+
+        //print_r($sqllist);
+        if(!$resultlist = $connection->query($sqllist)){
+            die("<br />Doslo je do greske u upitu za proveru max userorder.id: " . $connection->error );
+        }
+
+        //$rowlist = $resultlist->fetch_assoc();
+
+        return $resultlist;
+
+    }
+
+    public function orderItems($uoid){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sqloi = "SELECT userorder_item.item_id, userorder_item.userorder_id, userorder_item.quantity, userorder_item.price, ";
+        $sqloi .= "item.title ";
+        $sqloi .= "FROM userorder_item JOIN item ON userorder_item.item_id = item.id ";
+        $sqloi .= " WHERE userorder_item.userorder_id = {$uoid}";
+        if(!$resultsoi = $connection->query($sqloi)){
+            die("<br />Doslo je do greske u upitu za ispis userorder_item's: " . $connection->error );
+        }
+
+        return $resultsoi;
+
+    }
 
     public function writeOrder($order_array){
 
         $dbConn = new DbConnection();
         $connection = $dbConn->connectToDB();
 
-        //print_r($order_array);
-
         $uid = 0;
         foreach($order_array as $order_key=>$order_value){
-
-            //foreach($order_one as $order_key=>$order_value){
 
                 $idi = $order_value[0];
                 $price = $order_value[1];
@@ -33,19 +81,9 @@ class OrderDAO {
                 //echo "<br />Bio u proveri insertupdate = 2";
             }
 
-                /*$insertupdate = 0;
-                $sqlcheck1 = "SELECT id FROM userorder WHERE id = {$uid}";
-                if (!$resultscheck = $connection->query($sqlcheck1)){
-                    $insertupdate = 1;
-                    echo "<br />Bio u proveri insertupdate = 1";
-                }else{
-                    $insertupdate = 2;
-                    echo "<br />Bio u proveri insertupdate = 2";
-                }*/
-
                 if($insertupdate == 1){
                     //Insert
-                    $sqlinsusr = "INSERT INTO userorder (order_date, orderstatus, started, finished, user_id) VALUES ('$today', 'nije', '$today', '$today', $uid); ";
+                    $sqlinsusr = "INSERT INTO userorder (order_date, orderstatus, user_id) VALUES ('$today', 'nije', $uid); ";
                     if (!$resultswrite = $connection->query($sqlinsusr)){
                         die('<br />Ne mogu da izvrsim Insert upit u userorder tabelu zbog ['. $connection->error
                             . "]");
@@ -59,6 +97,38 @@ class OrderDAO {
                     $maxrow = $resultsmax->fetch_assoc();
                     $userorder_id = $maxrow['MAX(id)'];
 
+                    $ch = 0;
+                    do{
+                        $ch++;
+                        //create $checkorder_id number for checking of order confirm
+                        $checkorder_id = mt_rand(1000, 100000) . $userorder_id . mt_rand(1000, 100000);
+
+                        /*check if $checkorder_id exists in db  */
+                        $sqlcheck = "SELECT checkorder_id FROM userorder WHERE checkorder_id = {$checkorder_id}";
+
+                        $resultcheck = $connection->query($sqlcheck);
+                        $rowcheck = $resultcheck->fetch_assoc();
+
+                        if(($rowcheck['checkorder_id'] === NULL) || (($rowcheck['checkorder_id']) <> $checkorder_id) ){
+
+                            //echo "<br />Row iznosi: ";
+                            //echo $rowcheck = $resultcheck->fetch_assoc();
+                            //echo "<br />";
+                            //print_r($resultcheck);
+                            //var_dump($resultcheck);
+                            //if not exists checkorder_id - add it
+                            $sqlinscheck = "UPDATE userorder SET checkorder_id = '{$checkorder_id}' WHERE id = '{$userorder_id}'; ";
+
+                            if(!$resultinscheck = $connection->query($sqlinscheck)){
+                                die("<br />Doslo je do greske u upitu za update checkorder_id: " . $connection->error );
+                            }else{
+                                $rowcheck = 1;
+                                //$rowinscheck = $resultinscheck->fetch_assoc();
+                            }
+                        }else {
+                            $rowcheck = 2;
+                        }
+                    }while($rowcheck == 2);
 
                     $sqlinsitm = "INSERT INTO userorder_item (item_id, price, quantity, userorder_id) VALUES ($idi, $price, $coli, $userorder_id); ";
                     if (!$resultswriteitem = $connection->query($sqlinsitm)){
@@ -66,14 +136,8 @@ class OrderDAO {
                             . "]");
                     }
 
-                    //$sqlreturn = "SELECT userorder.id FROM userorder WHERE userorder.id = {}";
-
-                    //return $userorder_id;
-
                 }elseif($insertupdate == 2){
-                    //$sqlupditm = "UPDATE userorder_item SET (item_id = {$idi}, price = '{$price}', quantity = {$coli}) WHERE userorder_id = {$userorder_id}";
                     $sqlupditm = "INSERT INTO userorder_item (item_id, price, quantity, userorder_id) VALUES ($idi, $price, $coli, $userorder_id); ";
-                    //var_dump($sqlupditm);
                     if (!$resultsupditem = $connection->query($sqlupditm)){
                         die('<br />Ne mogu da izvrsim Update upit zbog ['. $connection->error
                             . "]");
@@ -81,10 +145,12 @@ class OrderDAO {
 
 
                 }
-            //}
         }
 
-        return $userorder_id;
+
+        $order_results = array($userorder_id, $checkorder_id);
+
+        return $order_results;
 
     }
 
@@ -128,7 +194,7 @@ class OrderDAO {
     }*/
 
 
-    public function sendEmail($foremail1){
+    public function sendEmail($foremail1, $checkorder_id){
 
         // ---------------- SEND MAIL FORM ----------------
         $mail = new PHPMailer();
@@ -190,10 +256,60 @@ class OrderDAO {
         if(!$mail->Send()) {
             echo "Mailer Error: " . $mail->ErrorInfo;
         } else {
-            echo "Message sent!";
+            echo "Poruka je poslata na email koji ste registrovali.";
+            echo "Molimo Vas da sa email-a potvrdite porudžbinu klikom na odgovarajući link.";
         }
 
         echo '<br />';
         echo "Ako ste upisali ispravnu email adresu, fajl ce Vam biti isporucen putem email-a.";
     }
+
+
+    public function confirmOrder($co){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $dt = new DateTime();
+        $today = $dt->format('Y-m-d H:i:s');
+
+        $sqlco = "UPDATE userorder SET orderstatus = 'Potvrđeno', started = '$today' WHERE checkorder_id = {$co}";
+        if(!$results = $connection->query($sqlco)){
+            die("Postoji problem prilikom confirm update userorder tabele zbog: [". $connection->error
+                            . "]");
+        }
+
+        if($results > 0){
+            return $confirmorder = "Uspešno je potvrđena Vaša porudžbina!";
+        }else{
+            echo "Nije pronadjen niti jedan zapis!";
+        }
+
+    }
+
+    public function disableOrder($do){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $dt = new DateTime();
+        $today = $dt->format('Y-m-d H:i:s');
+
+        $sqldo = "UPDATE userorder SET orderstatus = 'Otkazano', finished = '$today' WHERE checkorder_id = {$do}";
+        if(!$results = $connection->query($sqldo)){
+            die("Postoji problem prilikom confirm update userorder tabele zbog: [". $connection->error
+                . "]");
+        }
+
+        if($results > 0){
+            print_r($results);
+            var_dump($results);
+            return $confirmorder = "Uspešno je otkazana Vaša porudžbina!";
+        }else{
+            echo "Nije pronadjen niti jedan zapis!";
+        }
+
+    }
+
+
 }

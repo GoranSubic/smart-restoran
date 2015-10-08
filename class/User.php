@@ -6,6 +6,8 @@ class User {
     protected $id;
     protected $name;
     protected $secname;
+    protected $adress;
+    protected $city;
     protected $jbg;
     protected $email;
     protected $passwd;
@@ -36,11 +38,27 @@ class User {
     }
 
     public function setSecName($secname){
-        $this->SecName = $secname;
+        $this->secname = $secname;
     }
 
     public function getSecName(){
         return $this->secname;
+    }
+
+    public function setAdress($adress){
+        $this->adress = $adress;
+    }
+
+    public function getAdress(){
+        return $this->adress;
+    }
+
+    public function setCity($city){
+        $this->city = $city;
+    }
+
+    public function getCity(){
+        return $this->city;
     }
 
     public function setJbg($jbg){

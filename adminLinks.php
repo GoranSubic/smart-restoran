@@ -16,6 +16,7 @@
 if($is_admin == 1) {
     echo "<h4>Admin linkovi:</h4><br />";
     echo "<ul>";
+    echo "<li><a href='showOrders.php'>Prikazi listu svih porudzbina</a></li>";
     echo "<li><a href='insertUser.php'>Dodaj novog korisnika</a></li>";
     echo "<li><a href='showUsers.php'>Prikazi listu svih korisnika</a></li>";
     echo "<li><a href='insertItem.php'>Dodaj novi artikal</a></li>";
