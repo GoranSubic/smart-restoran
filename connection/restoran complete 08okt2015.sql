@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2015 at 01:04 PM
+-- Generation Time: Oct 08, 2015 at 11:07 PM
 -- Server version: 5.6.25
 -- PHP Version: 5.6.11
 
@@ -106,19 +106,17 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `salary` decimal(10,2) NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `staff`
 --
 
 INSERT INTO `staff` (`id`, `work_place`, `salary`, `is_admin`, `user_id`) VALUES
-(7, 'korisnik', '0.00', 1, 9),
+(7, '1', '1.00', 1, 9),
 (9, 'korisnik', '0.00', 0, 11),
-(10, 'korisnik', '0.00', 1, 12),
-(13, '', '0.00', 0, 16),
-(16, 'korisnik', '0.00', 0, 19),
-(17, 'korisnik', '0.00', 0, 20);
+(17, 'korisnik', '0.00', 0, 20),
+(27, 'korisnik', '0.00', 0, 34);
 
 -- --------------------------------------------------------
 
@@ -139,21 +137,20 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mphone` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_staff` tinyint(1) DEFAULT NULL,
   `image_url` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `photo_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `photo_id` int(11) DEFAULT NULL,
+  `checkuser_id` bigint(20) NOT NULL,
+  `enabled` int(11) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `secname`, `jbg`, `adress`, `city`, `email`, `passwd`, `phone`, `mphone`, `is_staff`, `image_url`, `photo_id`) VALUES
-(9, 'Goran Hotmail', 'SubiÄ‡', '', 'VojvoÄ‘anska 14, IV, 28', 'Novi Sad', 'gsubic@hotmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '', '', 1, 'http://localhost/smart-restoran/photo/user/110620131357.jpg', 21),
-(11, 'Ivan', 'FixnoIme', '', NULL, NULL, 'ivandermanov@gmail.com', '202cb962ac59075b964b07152d234b70', '', '', 0, 'http://localhost/smart2015/smart-restoran/photo/user/11857553.jpg', 17),
-(12, 'Goran Gmail', 'FixnoIme', '', NULL, NULL, 'gsubic@gmail.com', '202cb962ac59075b964b07152d234b70', '', '', 0, 'http://localhost/smart2015/smart-restoran/photo/user/Indian_Spices.jpg', 1),
-(13, 'Sinisa', 'FixnoIme', '234', NULL, NULL, 'sinisa@gmail.com', '289dff07669d7a23de0ef88d2f7129e7', '021', '063', 1, 'http://localhost/smart2015/smart-restoran/photo/user/Dafed.jpg', 20),
-(16, 'Goran Yahoo', 'Subic', '456', 'VojvoÄ‘anska 14, IV, 28', 'Novi Sad', 'gsubic@yahoo.com', '827ccb0eea8a706c4c34a16891f84e7b', '021', '065', 0, 'http://localhost/smart-restoran/photo/user/Indian_Spices.jpg', 1),
-(19, 'Slavko', 'Bodvanski', '567', 'MiÅ¡e DimitrijeviÄ‡a', 'Novi Sad', 'sbod@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '021', '064/21-31-184', NULL, '', NULL),
-(20, 'Slavko', 'Bodvanski', '56789', 'MiÅ¡e DimitrijeviÄ‡a', 'Novi Sad', 'bodvanski.slavko@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '021', '064/21-31-184', NULL, '', NULL);
+INSERT INTO `user` (`id`, `name`, `secname`, `jbg`, `adress`, `city`, `email`, `passwd`, `phone`, `mphone`, `is_staff`, `image_url`, `photo_id`, `checkuser_id`, `enabled`) VALUES
+(9, 'Goran Hotmail', 'SubiÄ‡', '', 'VojvoÄ‘anska 14, IV, 28', 'Novi Sad', 'gsubic@hotmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '', '', 1, 'http://localhost/smart-restoran/photo/user/110620131357.jpg', 21, 0, 1),
+(11, 'Ivan', 'FixnoIme', '', NULL, NULL, 'ivandermanov@gmail.com', '202cb962ac59075b964b07152d234b70', '', '', 0, 'http://localhost/smart2015/smart-restoran/photo/user/11857553.jpg', 17, 0, NULL),
+(20, 'Slavko', 'Bodvanski', '56789', 'MiÅ¡e DimitrijeviÄ‡a', 'Novi Sad', 'bodvanski.slavko@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '021', '064/21-31-184', NULL, '', NULL, 0, NULL),
+(34, 'Goran Y', 'Subic', '456', 'Vojvodjanska', 'NS', 'gsubic@yahoo.com', '202cb962ac59075b964b07152d234b70', '021', '065', NULL, '', NULL, 259413434711, 1);
 
 -- --------------------------------------------------------
 
@@ -169,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `userorder` (
   `started` datetime DEFAULT NULL,
   `finished` datetime DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `userorder`
@@ -250,7 +247,11 @@ INSERT INTO `userorder` (`id`, `order_date`, `orderstatus`, `checkorder_id`, `st
 (75, '2015-10-08 12:43:30', 'PotvrÄ‘eno', '856127586408', '2015-10-08 12:44:36', NULL, 9),
 (76, '2015-10-08 12:47:28', 'nije', '521337626578', NULL, NULL, 9),
 (77, '2015-10-08 12:51:28', 'nije', '326397747971', NULL, NULL, 9),
-(78, '2015-10-08 12:53:46', 'nije', '276877899020', NULL, NULL, 20);
+(78, '2015-10-08 12:53:46', 'nije', '276877899020', NULL, NULL, 20),
+(79, '2015-10-08 13:12:21', 'PotvrÄ‘eno', '412097998000', '2015-10-08 13:12:43', NULL, 16),
+(80, '2015-10-08 19:01:57', 'PotvrÄ‘eno', '581228013904', '2015-10-08 19:02:18', NULL, 28),
+(81, '2015-10-08 20:21:49', 'PotvrÄ‘eno', '34942819966', '2015-10-08 20:22:14', NULL, 29),
+(82, '2015-10-08 22:57:00', 'PotvrÄ‘eno', '212278247487', '2015-10-08 22:57:14', NULL, 34);
 
 -- --------------------------------------------------------
 
@@ -426,7 +427,16 @@ INSERT INTO `userorder_item` (`item_id`, `userorder_id`, `quantity`, `price`) VA
 (10, 77, 2, '300.00'),
 (4, 78, 2, '500.00'),
 (6, 78, 1, '1000.00'),
-(10, 78, 1, '300.00');
+(10, 78, 1, '300.00'),
+(3, 79, 2, '750.00'),
+(4, 79, 1, '500.00'),
+(3, 80, 1, '750.00'),
+(4, 80, 2, '500.00'),
+(3, 81, 1, '750.00'),
+(6, 81, 2, '1000.00'),
+(10, 81, 3, '300.00'),
+(3, 82, 1, '750.00'),
+(4, 82, 2, '500.00');
 
 --
 -- Indexes for dumped tables
@@ -492,17 +502,17 @@ ALTER TABLE `photo`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
 --
 -- AUTO_INCREMENT for table `userorder`
 --
 ALTER TABLE `userorder`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=79;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=83;
 --
 -- Constraints for dumped tables
 --

@@ -1,10 +1,27 @@
 <?php
 
 include "header2.php";
+include "class/LoginDAO.php";
 
 if(isset($_GET['response'])){
     echo $_GET['response'];
 }
+
+
+//enabling user through email
+if(isset($_GET['cr'])){
+    $loginco = new LoginDAO();
+    $confirmlogin = $loginco->confirmLogin($_GET['cr']);
+echo $confirmlogin;
+}
+
+//disabling user through email
+if(isset($_GET['dr'])){
+$loginco = new LoginDAO();
+$disablinglogin = $loginco->disableLogin($_GET['dr']);
+echo $disablinglogin;
+}
+
 ?>
 
 <script type="text/javascript" language="javascript">

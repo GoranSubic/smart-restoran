@@ -48,6 +48,7 @@ include "headeradmin.php";
                 Radi u: <input type="text" name="work_place" value=""><br />
                 Plata: <input type="text" name="salary" value=""><br />
                 Admin: <input type="checkbox" name="is_admin" value=""><br />
+                Enabled: <input type="checkbox" name="enabled" value=""><br />
                 <br />
 
                 <input type="submit" name="submit" value="Upisi"><br /><br />

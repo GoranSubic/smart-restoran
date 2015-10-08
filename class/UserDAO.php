@@ -11,8 +11,8 @@ class UserDAO {
         $connection = $dbConn->connectToDB();
 
         $sql = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
-        $sql .= " user.secname, user.adress, user.city, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
-        $sql .= " staff.salary, staff.user_id, staff.work_place ";
+        $sql .= " user.secname, user.adress, user.city, user.passwd, user.phone, user.photo_id, user.enabled, user.checkuser_id, ";
+        $sql .= " staff.is_admin, staff.salary, staff.user_id, staff.work_place ";
         $sql .= " FROM user JOIN staff ON user.id = staff.user_id WHERE 1;";
 
         if (!$results = $connection->query($sql)){
@@ -30,8 +30,8 @@ class UserDAO {
         $connection = $dbConn->connectToDB();
 
         $sql = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
-        $sql .= " user.secname, user.adress, user.city, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
-        $sql .= " staff.salary, staff.user_id, staff.work_place ";
+        $sql .= " user.secname, user.adress, user.city, user.passwd, user.phone, user.photo_id, user.enabled, user.checkuser_id, ";
+        $sql .= " staff.is_admin, staff.salary, staff.user_id, staff.work_place ";
         $sql .= " FROM user JOIN staff ON user.id = staff.user_id WHERE user.id = {$id};";
 
         if (!$results = $connection->query($sql)){
@@ -49,7 +49,7 @@ class UserDAO {
      * Function for creating User with all parrams + Staff data
      *
      */
-    public function createStafs($namef, $secnamef, $adressf, $cityf, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf){
+    public function createStafs($namef, $secnamef, $adressf, $cityf, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf, $enabledf){
 
         //echo "Ulazni parametri su : namef - ".$namef." secnamef - ".$secnamef." - jbg - ".$jbgf."<br /><br />";
 
@@ -63,7 +63,7 @@ class UserDAO {
          *
          */
         // 1. prepraed SQL statement
-        if($sqlup = $connection->prepare("INSERT INTO user ( name, secname, adress, city, jbg, email, passwd, phone, mphone, is_staff, image_url, photo_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)") ){
+        if($sqlup = $connection->prepare("INSERT INTO user ( name, secname, adress, city, jbg, email, passwd, phone, mphone, is_staff, image_url, photo_id, enabled) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)") ){
 
             // 3. params
             /*
@@ -83,10 +83,11 @@ class UserDAO {
             $is_staff = $is_stafff;
             $image_url = $image_urlf;
             $photo_id = $photo_idf;
+            $enabled = $enabledf;
 
             //2. binding params
             $sqlup->bind_param(
-                'sssssssssisi',
+                'sssssssssisii',
                 $name,
                 $secname,
                 $adress,
@@ -98,7 +99,8 @@ class UserDAO {
                 $mphone,
                 $is_staff,
                 $image_url,
-                $photo_id
+                $photo_id,
+                $enabled
             );
 
             //4.  execute statement
@@ -178,7 +180,7 @@ class UserDAO {
      * Function for editing User with all parrams + Staff data
      *
      */
-    public function editStafs($idf, $namef, $secnamef, $adressf, $cityf, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $work_placef, $salaryf, $is_adminf){
+    public function editStafs($idf, $namef, $secnamef, $adressf, $cityf, $jbgf, $emailf, $passwdf, $phonef, $mphonef, $is_stafff, $image_urlf, $photo_idf, $enabledf, $work_placef, $salaryf, $is_adminf, $enabledf){
 
         //echo "Ulazni parametri su : idf - ".$idf." namef - ".$namef." secnamef - ".$secnamef." - jbg - ".$jbgf."<br /><br />";
 
@@ -192,7 +194,7 @@ class UserDAO {
          *
          */
         // 1. prepraed SQL statement
-        if($sqlup = $connection->prepare("UPDATE user SET name=?, secname=?, adress=?, city=?, jbg=?, email=?, passwd=?, phone=?, mphone=?, is_staff=?, image_url=?, photo_id=? WHERE id= {$idf};")){
+        if($sqlup = $connection->prepare("UPDATE user SET name=?, secname=?, adress=?, city=?, jbg=?, email=?, passwd=?, phone=?, mphone=?, is_staff=?, image_url=?, photo_id=?, enabled=? WHERE id= {$idf};")){
 
             // 3. params
             /*
@@ -225,10 +227,11 @@ class UserDAO {
             $is_staff = $is_stafff;
             $image_url = $image_urlf;
             $photo_id = $photo_idf;
+            $enabled = $enabledf;
 
             //2. binding params
             $sqlup->bind_param(
-                'sssssssssisi',
+                'sssssssssisii',
                 $name,
                 $secname,
                 $adress,
@@ -240,7 +243,8 @@ class UserDAO {
                 $mphone,
                 $is_staff,
                 $image_url,
-                $photo_id
+                $photo_id,
+                $enabled
             );
 
             //4.  execute statement

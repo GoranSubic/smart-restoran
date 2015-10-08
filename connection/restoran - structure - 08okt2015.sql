@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2015 at 01:05 PM
+-- Generation Time: Oct 08, 2015 at 11:07 PM
 -- Server version: 5.6.25
 -- PHP Version: 5.6.11
 
@@ -84,7 +84,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mphone` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_staff` tinyint(1) DEFAULT NULL,
   `image_url` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `photo_id` int(11) DEFAULT NULL
+  `photo_id` int(11) DEFAULT NULL,
+  `checkuser_id` bigint(20) NOT NULL,
+  `enabled` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

@@ -16,6 +16,8 @@ class User {
     protected $is_staff;
     protected $image_url;
     protected $photo_id;
+    protected $enabled;
+    protected $checkuser_id;
 
     public function __construct(){
 
@@ -123,6 +125,22 @@ class User {
 
     public function getPhotoId(){
         return $this->photo_id;
+    }
+
+    public function setEnabled($enabled){
+        $this->enabled = $enabled;
+    }
+
+    public function getEnabled(){
+        return $this->enabled;
+    }
+
+    public function setCheckUserId($checkuser_id){
+        $this->checkuser_id = $checkuser_id;
+    }
+
+    public function getCheckUserId(){
+        return $this->checkuser_id;
     }
 
 } 

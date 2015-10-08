@@ -3,7 +3,9 @@ include "header2.php";
 include "connection/DbConnection.php";
 include "class/User.php";
 
+include_once "class/EmailDAO.php";
 include_once "class/LoginDAO.php";
+
 
 //Checking for user logged in or not
 
@@ -36,7 +38,30 @@ if(isset($_REQUEST['submit'])){
         $user->getImageUrl()
     );
     if($register){
-        echo '<h3>Registration successful <a href="loginPage.php">Click here</a> to login</h3>';
+        //echo '<h3>Registration successful <a href="loginPage.php">Click here</a> to login</h3>';
+        echo "Proverite Vaš email i potvrdite registraciju!";
+
+        $rowreg = $register->fetch_assoc();
+        $enabled = $rowreg['enabled'];
+        $checkuser_id = $rowreg['checkuser_id'];
+        $to_email = $rowreg['email'];
+        $url_project = URL_PROJECT;
+        $subject = "Prijava na Smart-Porudzbine";
+        $foremail = "<html><head>
+                            <title>Prijava na Smart-Porudzbine</title>
+                            </head>
+                            <body>
+                            <p>Poštovani {$user->getName()},</p>
+                            <p>Prijavili ste se na Smart-Porudzbine aplikaciju koristeći - {$user->getEmail()}</p>
+                            <p>i sifru: - {$user->getPasswd()}</p>";
+
+        $foremail .= "Proverite i <a href='{$url_project}/loginPage.php?cr={$checkuser_id}' style='color: #8b0000'>klikom na ovaj link POTVRDITE</a> registraciju!<br />";
+        $foremail .= "Ako je u pitanju greška obrišite ovaj email,<br />";
+        $foremail .= "ili možete da <a href='{$url_project}/loginPage.php?dr={$checkuser_id}' style='color: #8b0000'>klikom na ovaj link OTKAŽETE</a> registraciju.";
+
+        $email = new EmailDAO();
+        $regEmail = $email->sendEmail($foremail, $checkuser_id, $to_email, $subject);
+
     } else {
         echo '<h3>Registration failed. Email alredy exists, please try again</h3>';
     }

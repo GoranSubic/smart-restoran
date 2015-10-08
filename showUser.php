@@ -101,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if(isset($_POST['is_admin'])){ $is_admin = '1'; } else { $is_admin = '0'; }
     if(isset($_POST['is_staff'])){ $is_staff = '1'; } else { $is_staff = '0'; }
+    if(isset($_POST['enabled'])){ $enabled = '1'; } else { $enabled = '0'; }
 
     $staff->setName($_POST['name']);
     $staff->setSecName($_POST['secondname']);
@@ -117,6 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $staff->setWorkPlace($_POST['work_place']);
     $staff->setSalary($_POST['salary']);
     $staff->setIsAdmin($is_admin);
+    $staff->setEnabled($enabled);
 
     $id = $userDao->createStafs(
         $staff->getName(),
@@ -133,7 +135,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $staff->getPhotoId(),
         $staff->getWorkPlace(),
         $staff->getSalary(),
-        $staff->getIsAdmin()
+        $staff->getIsAdmin(),
+        $staff->getEnabled()
     );
 
 }
@@ -172,6 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li><?php echo "<h4>Radi u ". $row['work_place'] ."</h4>" ?></li>
                     <li><?php echo "<h4>Plata ". $row['salary'] ."</h4>" ?></li>
                     <li><?php echo "<h4>Admin ". $row['is_admin'] ."</h4>" ?></li>
+                    <li><?php echo "<h4>Enabled ". $row['enabled'] ."</h4>" ?></li>
                 <?php } ?>
 
                 <br />

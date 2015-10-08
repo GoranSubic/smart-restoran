@@ -29,7 +29,7 @@ if (isset($_REQUEST['submit'])){
     }
     if($login === 0){
         //Registration Failed
-        $response = '<h3 style="color:indianred">Wrong email or password!</h3>';
+        $response = '<h3 style="color:indianred">Pogresan email ili sifra! <br />Možda Vam korisnik nije aktivan, proverite da li imate email za potvrdu registracije!</h3>';
         header("location:header.php?response={$response}");
     }
 }

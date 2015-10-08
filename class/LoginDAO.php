@@ -1,6 +1,8 @@
 <?php
 
-//include "..\connection\DbConnection.php";
+include_once "connection/DbConnection.php";
+include_once "connection/db_config.php";
+
 
 class LoginDAO {
 
@@ -11,6 +13,54 @@ class LoginDAO {
         $connection = $this->db->connectToDB();
     }*/
 
+
+    /** Enabling login **/
+    public function confirmLogin($cr){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sqldrcheck = "SELECT checkuser_id FROM user WHERE checkuser_id = {$cr}";
+        $resultcheck = $connection->query($sqldrcheck);
+        $rowcheck = $resultcheck->fetch_assoc();
+
+        //print_r($rowcheck['checkuser_id']);
+        if($rowcheck['checkuser_id'] == NULL){
+            return $confirmdr = "Nije pronadjen niti jedan zapis!";
+        }else{
+            $sqlcr = "UPDATE user SET enabled = '1' WHERE checkuser_id = {$cr}; ";
+            if(!$resultcr = $connection->query($sqlcr)){
+                die('Ne mogu da izvrsim upit checkuser_id 1 user zbog: ['. $connection->error
+                    . "]");
+            }else{
+                return $confirmcr = "<h3>Registracija je uspesna, mozete se ulogovati!</h3>";
+            }
+        }
+    }
+
+    /** Disabling login **/
+    public function disableLogin($dr){
+
+        $dbConn = new DbConnection();
+        $connection = $dbConn->connectToDB();
+
+        $sqldrcheck = "SELECT checkuser_id FROM user WHERE checkuser_id = {$dr}";
+        $resultcheck = $connection->query($sqldrcheck);
+        $rowcheck = $resultcheck->fetch_assoc();
+
+        //print_r($rowcheck['checkuser_id']);
+        if($rowcheck['checkuser_id'] == NULL){
+            return $confirmdr = "Nije pronadjen niti jedan zapis!";
+        }else{
+            $sqldr = "UPDATE user SET enabled = '0' WHERE checkuser_id = {$dr}";
+            if(!$resultdr = $connection->query($sqldr)){
+                die("Ne mogu da izvrsim upit checkuser_id 0 user zbog: [". $connection->error
+                    . "]");
+            }else{
+                return $confirmdr = "Uspešno je otkazan Vaš LogIn!";
+            }
+        }
+    }
 
     /***for registration process ***/
     public function reg_user($name, $secname, $adress, $city, $email, $passwordf, $jbg, $phone, $mphone, $image_url){
@@ -45,6 +95,42 @@ class LoginDAO {
             $maxrow = $results->fetch_assoc();
             $id = $maxrow['MAX(id)'];*/
 
+            $ch = 0;
+            do{
+                $ch++;
+                //create $checkorder_id number for checking of order confirm
+                $checkuser_id = mt_rand(1000, 100000) . $id . mt_rand(1000, 100000);
+
+                /*check if $checkorder_id exists in db  */
+                $sqlcheck = "SELECT checkuser_id FROM user WHERE checkuser_id = {$checkuser_id}";
+
+                //print_r("SQL upit za checkuser_id je: ".$sqlcheck);
+
+                $resultcheck = $connection->query($sqlcheck);
+                $rowcheck = $resultcheck->fetch_assoc();
+
+                if(($rowcheck['checkuser_id'] === NULL) || (($rowcheck['checkuser_id']) != $checkuser_id) ){
+
+                    //echo "<br />Row iznosi: ";
+                    //echo $rowcheck = $resultcheck->fetch_assoc();
+                    //echo "<br />";
+                    //print_r($resultcheck);
+                    //var_dump($resultcheck);
+                    //if not exists checkorder_id - add it
+                    $sqlinscheck = "UPDATE user SET checkuser_id = '{$checkuser_id}' WHERE id = '{$id}'; ";
+
+                    if(!$resultinscheck = $connection->query($sqlinscheck)){
+                        die("<br />Doslo je do greske u upitu za update checklogin_id: " . $connection->error );
+                    }else{
+                        $rowcheck = 1;
+                        //$rowinscheck = $resultinscheck->fetch_assoc();
+                    }
+                }else {
+                    $rowcheck = 2;
+                }
+            }while($rowcheck == 2);
+
+
             $sql2 = "INSERT INTO staff SET work_place = 'korisnik', user_id = {$id};";
 
             if (!$results2 = $connection->query($sql2)){
@@ -54,8 +140,14 @@ class LoginDAO {
 
             if(!$results = $results1 && $results2){
                 die('Results nije vratio ispravan result - problem je sa upisom u user ili staff tabelu!');
+            }else {
+
+                $sqlres = "SELECT * FROM user WHERE id = {$id}; ";
+                if(!$results = $connection->query($sqlres)){
+                    die('Results nije vratio ispravan result - problem je kod podataka za registraciju!'.$connection->error);
+                }
+                return $results;
             }
-            return $results;
         }else{
             return false;
         }
@@ -126,7 +218,7 @@ class LoginDAO {
 
         $password1 = md5($password);
         $sql4 = "SELECT user.id, user.email, user.image_url, user.is_staff, user.jbg, user.mphone, user.name, ";
-        $sql4 .= " user.secname, user.passwd, user.phone, user.photo_id, staff.is_admin,  ";
+        $sql4 .= " user.secname, user.passwd, user.phone, user.photo_id, user.enabled, staff.is_admin,  ";
         $sql4 .= " staff.salary, staff.user_id, staff.work_place ";
         $sql4 .= " from user JOIN staff ON user.id = staff.user_id WHERE user.email = '{$email}' AND user.passwd = '{$password1}'";
 
@@ -141,7 +233,7 @@ class LoginDAO {
         $user_data = $result->fetch_assoc();
         //$user_data = $rowcheck['id'];
 
-        if ($count_row == 1){
+        if (($count_row == 1) && ($user_data['enabled'] == 1)){
             //this login var will use for the session thing
             $_SESSION['login'] = true;
             $_SESSION['id'] = $user_data['id'];

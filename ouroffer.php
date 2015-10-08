@@ -197,8 +197,10 @@ if (!$results = $connection->query($sql)){
                     echo "<br /><h4 style='color:#8b0000'>Poručili ste hranu u vrednosti: {$value_all},00 din.</h4>";
                     $foremail .= "</body></html>";
 
+                    $to_email = $_SESSION['email'];
+                    $subject = "Smart-Restoran - Kreirana porudzbina";
                     //Send email's
-                    $order->sendEmail($foremail, $order_results[1]);
+                    $order->sendEmail($foremail, $order_results[1], $to_email, $subject);
                 }
                 ?>
             </table>

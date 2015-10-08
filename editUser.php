@@ -112,6 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if(isset($_POST['is_staff'])){ $is_staff = '1'; } else { $is_staff = '0'; }
 
+    if(isset($_POST['enabled'])){ $enabled = '1'; } else { $enabled = '0'; }
+
     if(isset($_POST['work_place'])){ $work_place = $_POST['work_place']; } else { $work_place = ''; }
 
     if(isset($_POST['salary'])){ $salary = $_POST['salary']; } else { $salary = ''; }
@@ -133,6 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $staff->setWorkPlace($work_place);
     $staff->setSalary($salary);
     $staff->setIsAdmin($is_admin);
+    $staff->setEnabled($enabled);
 
     $id = $userDao->editStafs(
         $staff->getId(),
@@ -150,7 +153,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $staff->getPhotoId(),
         $staff->getWorkPlace(),
         $staff->getSalary(),
-        $staff->getIsAdmin()
+        $staff->getIsAdmin(),
+        $staff->getIsAdmin(),
+        $staff->getEnabled()
     );
 
 }
@@ -202,6 +207,7 @@ $row = $resultsshow->fetch_assoc();
                     Radi u: <input type="text" name="work_place" value="<?php echo $row['work_place']; ?>"><br />
                     Plata: <input type="text" name="salary" value="<?php echo $row['salary']; ?>"><br />
                     Admin: <input type="checkbox" name="is_admin" value="" <?php if($row['is_admin'] == true) echo "checked"; ?> ><br />
+                    Enabled: <input type="checkbox" name="enabled" value="" <?php if($row['enabled'] == true) echo "checked"; ?> ><br />
                 <?php } ?>
                 <br />
 
