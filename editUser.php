@@ -207,8 +207,9 @@ $row = $resultsshow->fetch_assoc();
                     Radi u: <input type="text" name="work_place" value="<?php echo $row['work_place']; ?>"><br />
                     Plata: <input type="text" name="salary" value="<?php echo $row['salary']; ?>"><br />
                     Admin: <input type="checkbox" name="is_admin" value="" <?php if($row['is_admin'] == true) echo "checked"; ?> ><br />
-                    Enabled: <input type="checkbox" name="enabled" value="" <?php if($row['enabled'] == true) echo "checked"; ?> ><br />
                 <?php } ?>
+
+                Enabled: <input type="checkbox" name="enabled" value="" <?php if($row['enabled'] == true) echo "checked"; ?> ><br />
                 <br />
 
                 <input type="submit" name="submit" value="Upisi"><br /><br />

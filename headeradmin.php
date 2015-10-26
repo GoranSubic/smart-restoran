@@ -39,20 +39,20 @@
 </head>
 <body>
 
-<div class="wrapper"> <!-- wrapper class -->
+<div class="wrapper" style="background-color: #fff"> <!-- wrapper class -->
 
     <div class="nav">
         <ul> <!--style="background-color: #D2691E"-->
-            <li class="uli menu"><a href="index.php">Home</a></li>
-            <li class="uli menu"><a href="african.php">African cuisine</a></li>
-            <li class="uli menu"><a href="caribbean.php">Caribbean cuisine</a></li>
-            <li class="uli menu"><a href="indian.php">Indian cuisine</a></li>
+            <li class="uli menu"><a href="http://localhost/olala">O nama</a></li>
+            <li class="uli menu"><a href="localhost/olala/jelovnik/">Jelovnik</a></li>
+            <li class="uli menu"><a href="localhost/olala/dostava">Dostava</a></li>
+            <li class="uli menu"><a href="localhost/olala/galerija">Galerija</a></li>
             <li class="uli menu"><a href="ouroffer.php">OurOffffer</a></li>
-            <li class="uli menu"><a href="showPhotoItems.php">Photos</a></li>
+            <li class="uli menu"><a href="localhost/olala/kontakt">Kontakt</a></li>
             <!--li class="uli menu"><a href="registration.php">SignUp</a></li-->
         </ul>
     </div>
-    <div class="nav">
+    <div class="navlogin">
         <form action="login.php" method="post" name="login" class="form-inline">
             <div class="form-group">
                 <label for="loginemail" class="login">Enter Email <input type="text" name="email" required="" id="loginemail" class="form-control login" style="width: 50%; height: 20px;" /></label>
@@ -65,18 +65,18 @@
             </div>
 
 
-                <a href="registration.php" style="color: #deb887" class='login loglink'>SignUp</a>
+            <a href="registration.php" style="color: #deb887" class='login loglink'>SignUp</a>
 
-                <?php
-                    if(isset($_SESSION['login'])) {
-                        echo "<a href='showUser.php?id={$_SESSION['id']}' style='color:#deb887' class='login loglink'>MojProfil</a>";
-                        echo "<a href='logout.php' style='color:#deb887' class='login loglink'>SignOut</a>";
-                        echo "<span style='color:darkred' class='login loglink'>{$_SESSION['name']}</span>";
-                    }
-                if($is_admin == 1){
-                    echo "<a href='adminPage.php' style='color:darkred' class='login loglink'>Admin</a>";
-                }
-                ?>
+            <?php
+            if(isset($_SESSION['login'])) {
+                echo "<a href='showUser.php?id={$_SESSION['id']}' style='color:#deb887' class='navlogin login loglink'>MojProfil</a>";
+                echo "<a href='logout.php' style='color:#deb887' class='navlogin login loglink'>SignOut</a>";
+                echo "<span style='color:darkred' class='navlogin login loglink'>{$_SESSION['name']}</span>";
+            }
+            if($is_admin == 1){
+                echo "<a href='adminPage.php' style='color:darkred' class='navlogin login loglink'>Admin</a>";
+            }
+            ?>
         </form>
 
 

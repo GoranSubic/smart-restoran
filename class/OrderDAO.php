@@ -215,14 +215,14 @@ class OrderDAO {
         $mail->Password   = "smart2015";            // GMAIL password
 
 
-        $mail->AddReplyTo("restoransmart@gmail.com","Smart Restoran - Kreirana porudzbina");
+        $mail->AddReplyTo("restoransmart@gmail.com","Olala Restoran - Kreirana porudzbina");
         //$mail->AddReplyTo($emailun,"Podrska BB Trade ad");
 
         $mail->From       = "restoransmart@gmail.com";
-        $mail->FromName   = "Smart Restoran";
+        $mail->FromName   = "Olala Restoran";
         $mail->AddAddress($_SESSION['email']);
         $restoran = "restoransmart@gmail.com";
-        $mail->AddCC($restoran, $name = 'Smart Restoran');
+        $mail->AddCC($restoran, $name = 'Olala Restoran');
         //$mail->AddAttachment('gsubic@gmail.com', 'Goran Subic');
         //AddCC($address, $name = '')
         //$mail->AddAttachment("/tmp/izvestaj.csv");             // attachment
@@ -233,18 +233,18 @@ class OrderDAO {
 
         // Your subject
         //$subject="Your confirmation link here";
-        $mail->Subject = "Smart Restoran - Kreirana porudzbina";
+        $mail->Subject = "Olala Restoran - Kreirana porudzbina";
 
         // From
         //$header="from: your name <your email>";
-        $mail->Header = "from: Smart Restoran <restoransmart@gmail.com>";
+        $mail->Header = "from: Olala Restoran <restoransmart@gmail.com>";
 
         // Your message
         //$message="Your Comfirmation link \r\n";
         //$message.="Click on this link to activate your account \r\n";
         //$message.="http://www.yourweb.com/confirmation.php?passkey=$confirm_code";
-        $mail->Body = "Smart Restoran - Kreirana porudzbina {$foremail1}";                      //HTML Body
-        $mail->AltBody    = "AltBody - Smart Restoran - Kreirana porudzbina"; // optional, comment out and test
+        $mail->Body = "Olala Restoran - Kreirana porudzbina {$foremail1}";                      //HTML Body
+        $mail->AltBody    = "AltBody - Olala Restoran - Kreirana porudzbina"; // optional, comment out and test
         $mail->WordWrap   = 50; // set word wrap
 
         //$mail->MsgHTML($body);
@@ -302,8 +302,8 @@ class OrderDAO {
         }
 
         if($results > 0){
-            print_r($results);
-            var_dump($results);
+            //print_r($results);
+            //var_dump($results);
             return $confirmorder = "Uspešno je otkazana Vaša porudžbina!";
         }else{
             echo "Nije pronadjen niti jedan zapis!";

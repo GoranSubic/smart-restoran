@@ -25,6 +25,24 @@ $orderList = $order->orderList();
 
 ?>
 
+<script>
+    function loadDoc(ajuoid) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                document.getElementById("show_order").innerHTML = xhttp.responseText;
+            }
+        };
+        xhttp.open("GET", "showOrder_ajax.php?uoid=" + ajuoid, true);
+        xhttp.send();
+    }
+</script>
+
+<br />
+<div style="float: left" id="show_order">
+    <p>Order-AJAX table</p>
+</div>
+
 <table class="table table-hover datagrid">
 
     <tr style="background-color: chocolate">
@@ -42,10 +60,14 @@ $orderList = $order->orderList();
 
     <tr>
 
-        <td><?php echo $rowlist['oid']; ?></td>
+        <td><?php echo "<a href='showOrder.php?uoid={$rowlist['oid']}' >".$rowlist['oid']; ?></td>
         <td><?php echo $rowlist['odate']; ?></td>
         <td><?php echo $rowlist['ostatus']; ?></td>
-        <td><?php echo $rowlist['ostarted']; ?></td>
+        <!--td><!--?php echo "<a href='showOrder.php?uoid={$rowlist['oid']}' >".$rowlist['ostarted']; ?></td-->
+        <td><?php if($rowlist['ostarted'] <> null) {
+                echo "<button type='button' onclick='loadDoc({$rowlist['oid']})' >{$rowlist['ostarted']}</button>";
+            }
+            ?></td>
         <td><?php echo $rowlist['ofinished']; ?></td>
         <td><?php echo $rowlist['uemail']; ?></td>
         <td><?php echo $rowlist['uadress']; ?></td>

@@ -1,0 +1,45 @@
+# sve sto pocinje sa tarabom je komentar
+# ove 4. tacke koje ti saljem mozes koristiti na bilo kom sajtu bez dodatnih menjanja (sem linka za 404 stranicu)
+# stavke 1. i 2. su po meni MUST, ostalo je pozeljno, ali ne mora...
+# postoje mnogo komplikovanije konfiguracije kada postoje paginacije na stranici i slicno
+# pokusaj sam da istrazis
+
+
+
+
+# 1.
+# disable directory browsing
+OPTIONS -Indexes
+IndexIgnore *
+
+
+
+# 2.
+# secure .htaccess files
+<Files .htaccess>
+order allow,deny
+deny from all
+</Files>
+
+
+
+# 3.
+# u browseru izbacuje .php ekstenziju iz naziva fajla
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+
+
+# 4.
+# 404 stranica
+# ErrorDocument 404 http://www.tvojsajt.com/404
+ErrorDocument 404 http://localhost/olala/orders/ouroffer.php
+
+
+
+
+
+
+# !!!!!!!!!!!!!!!!!!!!!!!
+# nisam siguran da ce raditi u localhostu

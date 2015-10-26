@@ -213,11 +213,15 @@ if (!$results = $connection->query($sql)){
         ?>
     </div>
 
-    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <!--form method="post" action="<!--?php echo $_SERVER['PHP_SELF']; ?>"-->
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"-->
         <input type="submit" name="submit" value="Odaberite količine i potvrdite porudžbinu ovde" class="btn btn-default btn-lg btn-block">
+
+        <div class="main container-fluid" style="margin-top: 10px">
+
         <?php WHILE ($row = $results->fetch_assoc()){ ?>
-            <div class="secolPhoto">
-                <table class="table datagrid" style="width: 100%">
+            <div class="secolPhoto" style="border-color: #d2691e;">
+                <table class="table datagrid" style="width: 30%; float: left;">
 
                     <tr style="background-color: chocolate">
                         <th style="width: 40%">ID: <?php echo "<a style='color:darkred' href='showItem.php?id={$row['id']}'> ".$row['id']."</a>"; ?></th>
@@ -232,23 +236,31 @@ if (!$results = $connection->query($sql)){
                     <tfoot>
                     <!--  Polja u formi ---------------------------------------------------->
                     <td style="width: 40%"><input style="width: 100px" type="money" name="price<?php echo $row['id']; ?>" value="<?php echo $row['price']; ?>" readonly></td>
-                    <td style="width: 130px">
+                    <td style="width: 130px" colspan = "2">
                         <input type="hidden" name="id<?php echo $row['id']; ?>" value="<?php echo $row['id']; ?>">
                         <span style="color:#8b0000">Količina: <input style="width: 50px" type="number" name="col<?php echo $row['id']; ?>" min="0" max="10" value="0"></span>
+
+                        <?php if($is_admin == 1){
+                            echo "<a href='<?php echo {$_SERVER['PHP_SELF']}; ?>?del={$row['id']}' style='color: #8b0000'>Del</a>";
+                        } ?>
                     </td>
 
-                    <?php if($is_admin == 1){
-                        echo "<td style='width: 20%'><a href='ouroffer.php?del={$row['id']}' style='color: #8b0000'>Del</a> </td>";
-                    } ?>
+
                     </tfoot>
 
                 </table>
             </div>
         <?php } ?>
 
+        </div>
     </form>
 </div>
+
+
 <?php
-include "footer.php";
-//$logger->WriteLog($logger->dataToLog);
+
+    $connection->close();
+
+    include "footer.php";
+
 ?>

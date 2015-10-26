@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.12
+-- version 4.3.11
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2015 at 11:07 PM
--- Server version: 5.6.25
--- PHP Version: 5.6.11
+-- Generation Time: Oct 11, 2015 at 08:42 PM
+-- Server version: 5.6.24
+-- PHP Version: 5.6.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `olalaco_websajt`
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `photo` (
   `description` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_item` tinyint(1) DEFAULT NULL,
   `is_photo` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `photo`
@@ -92,7 +92,8 @@ INSERT INTO `photo` (`id`, `title`, `description`, `is_item`, `is_photo`) VALUES
 (18, '11857553.jpg', '', NULL, NULL),
 (19, '11834673_10205614200249200_3656359246805702891_o.jpg', '', NULL, NULL),
 (20, 'Dafed.jpg', '', NULL, NULL),
-(21, '110620131357.jpg', '', NULL, NULL);
+(21, '110620131357.jpg', '', NULL, NULL),
+(22, 'loft.jpg', '', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -106,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `salary` decimal(10,2) NOT NULL,
   `is_admin` tinyint(1) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `staff`
@@ -115,8 +116,7 @@ CREATE TABLE IF NOT EXISTS `staff` (
 INSERT INTO `staff` (`id`, `work_place`, `salary`, `is_admin`, `user_id`) VALUES
 (7, '1', '1.00', 1, 9),
 (9, 'korisnik', '0.00', 0, 11),
-(17, 'korisnik', '0.00', 0, 20),
-(27, 'korisnik', '0.00', 0, 34);
+(27, '', '0.00', 0, 34);
 
 -- --------------------------------------------------------
 
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `photo_id` int(11) DEFAULT NULL,
   `checkuser_id` bigint(20) NOT NULL,
   `enabled` int(11) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
@@ -149,8 +149,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`id`, `name`, `secname`, `jbg`, `adress`, `city`, `email`, `passwd`, `phone`, `mphone`, `is_staff`, `image_url`, `photo_id`, `checkuser_id`, `enabled`) VALUES
 (9, 'Goran Hotmail', 'SubiÄ‡', '', 'VojvoÄ‘anska 14, IV, 28', 'Novi Sad', 'gsubic@hotmail.com', '827ccb0eea8a706c4c34a16891f84e7b', '', '', 1, 'http://localhost/olala/orders/photo/user/110620131357.jpg', 21, 0, 1),
 (11, 'Ivan', 'FixnoIme', '', NULL, NULL, 'ivandermanov@gmail.com', '202cb962ac59075b964b07152d234b70', '', '', 0, 'http://localhost/olala/orders/photo/user/11857553.jpg', 17, 0, NULL),
-(20, 'Slavko', 'Bodvanski', '56789', 'MiÅ¡e DimitrijeviÄ‡a', 'Novi Sad', 'bodvanski.slavko@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', '021', '064/21-31-184', NULL, '', NULL, 0, NULL),
-(34, 'Goran Y', 'Subic', '456', 'Vojvodjanska', 'NS', 'gsubic@yahoo.com', '202cb962ac59075b964b07152d234b70', '021', '065', NULL, '', NULL, 259413434711, 1);
+(34, 'Goran Ya', 'Subic', '456', 'Vojvodjanska', 'NS', 'gsubic@yahoo.com', '202cb962ac59075b964b07152d234b70', '021', '065', 0, 'http://localhost/olala/orders/photo/user/loft.jpg', 22, 259413434711, 1);
 
 -- --------------------------------------------------------
 
@@ -166,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `userorder` (
   `started` datetime DEFAULT NULL,
   `finished` datetime DEFAULT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `userorder`
@@ -251,7 +250,10 @@ INSERT INTO `userorder` (`id`, `order_date`, `orderstatus`, `checkorder_id`, `st
 (79, '2015-10-08 13:12:21', 'PotvrÄ‘eno', '412097998000', '2015-10-08 13:12:43', NULL, 16),
 (80, '2015-10-08 19:01:57', 'PotvrÄ‘eno', '581228013904', '2015-10-08 19:02:18', NULL, 28),
 (81, '2015-10-08 20:21:49', 'PotvrÄ‘eno', '34942819966', '2015-10-08 20:22:14', NULL, 29),
-(82, '2015-10-08 22:57:00', 'PotvrÄ‘eno', '212278247487', '2015-10-08 22:57:14', NULL, 34);
+(82, '2015-10-08 22:57:00', 'PotvrÄ‘eno', '212278247487', '2015-10-08 22:57:14', NULL, 34),
+(83, '2015-10-11 18:45:49', 'nije', '17540835245', NULL, NULL, 34),
+(84, '2015-10-11 18:59:24', 'PotvrÄ‘eno', '250278434183', '2015-10-11 18:59:45', NULL, 34),
+(85, '2015-10-11 19:58:00', 'Otkazano', '663838519367', '2015-10-11 19:58:24', '2015-10-11 20:01:19', 35);
 
 -- --------------------------------------------------------
 
@@ -436,7 +438,15 @@ INSERT INTO `userorder_item` (`item_id`, `userorder_id`, `quantity`, `price`) VA
 (6, 81, 2, '1000.00'),
 (10, 81, 3, '300.00'),
 (3, 82, 1, '750.00'),
-(4, 82, 2, '500.00');
+(4, 82, 2, '500.00'),
+(3, 83, 1, '750.00'),
+(4, 83, 2, '500.00'),
+(6, 83, 1, '1000.00'),
+(3, 84, 2, '750.00'),
+(4, 84, 3, '500.00'),
+(6, 84, 4, '1000.00'),
+(3, 85, 1, '750.00'),
+(4, 85, 2, '500.00');
 
 --
 -- Indexes for dumped tables
@@ -446,8 +456,7 @@ INSERT INTO `userorder_item` (`item_id`, `userorder_id`, `quantity`, `price`) VA
 -- Indexes for table `item`
 --
 ALTER TABLE `item`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `staff_id` (`staff_id`);
+  ADD PRIMARY KEY (`id`), ADD KEY `staff_id` (`staff_id`);
 
 --
 -- Indexes for table `photo`
@@ -459,30 +468,25 @@ ALTER TABLE `photo`
 -- Indexes for table `staff`
 --
 ALTER TABLE `staff`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`id`), ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `photo_id` (`photo_id`);
+  ADD PRIMARY KEY (`id`), ADD KEY `photo_id` (`photo_id`);
 
 --
 -- Indexes for table `userorder`
 --
 ALTER TABLE `userorder`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `checkorder_id` (`checkorder_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `checkorder_id` (`checkorder_id`), ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `userorder_item`
 --
 ALTER TABLE `userorder_item`
-  ADD KEY `item_id` (`item_id`),
-  ADD KEY `order_id` (`userorder_id`);
+  ADD KEY `item_id` (`item_id`), ADD KEY `order_id` (`userorder_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -497,22 +501,22 @@ ALTER TABLE `item`
 -- AUTO_INCREMENT for table `photo`
 --
 ALTER TABLE `photo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=36;
 --
 -- AUTO_INCREMENT for table `userorder`
 --
 ALTER TABLE `userorder`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=83;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=86;
 --
 -- Constraints for dumped tables
 --
@@ -521,32 +525,19 @@ ALTER TABLE `userorder`
 -- Constraints for table `item`
 --
 ALTER TABLE `item`
-  ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`);
+ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`);
 
 --
 -- Constraints for table `staff`
 --
 ALTER TABLE `staff`
-  ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+ADD CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`);
-
---
--- Constraints for table `userorder`
---
-ALTER TABLE `userorder`
-  ADD CONSTRAINT `userorder_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
---
--- Constraints for table `userorder_item`
---
-ALTER TABLE `userorder_item`
-  ADD CONSTRAINT `userorder_item_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item` (`id`),
-  ADD CONSTRAINT `userorder_item_ibfk_2` FOREIGN KEY (`userorder_id`) REFERENCES `userorder` (`id`);
+ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
